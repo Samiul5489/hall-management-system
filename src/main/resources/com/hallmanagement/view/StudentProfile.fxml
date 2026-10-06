@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hallmanagement.controller.StudentProfileController"
+            styleClass="dashboard-root"
+            stylesheets="@../css/dashboard.css"
+            minWidth="960" minHeight="640">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="250" spacing="0">
+            <VBox styleClass="sidebar-header" spacing="4">
+                <Label styleClass="sidebar-app-name" text="RUET Hall System" />
+                <Label styleClass="sidebar-portal"   text="STUDENT PORTAL" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-width: 0;" VBox.vgrow="ALWAYS">
+                <VBox styleClass="sidebar-nav" spacing="3">
+                    <Label styleClass="nav-section-label" text="MAIN NAVIGATION" />
+                    <Button styleClass="nav-button" text="🏠  Dashboard" onAction="#onDashboardClicked" />
+                    <Button styleClass="nav-button-active" text="👤  My Profile" />
+                    <Button styleClass="nav-button" text="🏢  Hall Information" onAction="#onHallInformationClicked" />
+                    <Button fx:id="btnNavBilling" styleClass="nav-button" text="💳  Bill &amp; Due" onAction="#onBillingClicked" />
+                    <Button fx:id="btnNavNoticeBoard" styleClass="nav-button" text="📢  Notice Board" onAction="#onNoticeBoardClicked" />
+
+                    <Region prefHeight="10" />
+
+                    <Label styleClass="nav-section-label" text="RESIDENCE SERVICES" />
+                    <Button fx:id="btnNavHallChange" styleClass="nav-button" text="🔄  Apply for New Hall" onAction="#onHallChangeClicked" />
+                    <Button fx:id="btnNavRoomChange" styleClass="nav-button" text="🛏  Room/Seat Change" onAction="#onRoomChangeClicked" />
+                    <Button fx:id="btnNavComplaints" styleClass="nav-button" text="📝  Complaints" onAction="#onComplaintsClicked" />
+                    <Button fx:id="btnNavHallLeave"  styleClass="nav-button" text="🚪  Hall Leave" onAction="#onHallLeaveClicked" />
+                </VBox>
+            </ScrollPane>
+
+            <VBox styleClass="sidebar-footer" alignment="BOTTOM_CENTER">
+                <Label fx:id="lblUserId" styleClass="sidebar-footer-text" />
+                <Label fx:id="lblRole"   styleClass="sidebar-footer-text" />
+                <Region prefHeight="6" />
+                <Button fx:id="btnLogout"
+                        styleClass="btn-logout"
+                        text="⏻  Sign Out"
+                        maxWidth="Infinity"
+                        onAction="#onLogoutClicked" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+
+            <HBox styleClass="top-header-bar">
+                <Button text="← Back" styleClass="btn-top-back" onAction="#onBackClicked" />
+                <Label styleClass="top-header-title" text="Student Profile &amp; Residence Records" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblFeedback" styleClass="status-strip-text" text="" />
+            </HBox>
+
+            <ScrollPane fitToWidth="true" styleClass="main-scroll" VBox.vgrow="ALWAYS">
+                <VBox styleClass="main-content-fluid" spacing="18">
+
+                    <VBox styleClass="card" spacing="14">
+                        <Label styleClass="card-title" text="Personal &amp; Academic Credentials" />
+
+                        <GridPane hgap="16" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="130" prefWidth="130" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                                <ColumnConstraints minWidth="90" />
+                            </columnConstraints>
+
+                            <Label styleClass="field-label" text="Student Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                            <HBox alignment="CENTER_LEFT" spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                                <Label fx:id="lblNameDisplay" styleClass="text-value-bold" />
+                                <TextField fx:id="txtName" styleClass="input-field" visible="false" managed="false" prefWidth="250" />
+                            </HBox>
+                            <HBox alignment="CENTER_RIGHT" spacing="6" GridPane.rowIndex="0" GridPane.columnIndex="2">
+                                <Button fx:id="btnEditName" text="Edit" styleClass="btn-ghost" onAction="#onEditNameClicked" />
+                                <Button fx:id="btnSaveName" text="Save" styleClass="btn-primary" onAction="#onSaveNameClicked" visible="false" managed="false" />
+                                <Button fx:id="btnCancelName" text="Cancel" styleClass="btn-ghost" onAction="#onCancelNameClicked" visible="false" managed="false" />
+                            </HBox>
+
+                            <Label styleClass="field-label" text="Phone Number:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                            <HBox alignment="CENTER_LEFT" spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                                <Label fx:id="lblPhoneDisplay" styleClass="text-value" />
+                                <TextField fx:id="txtPhone" styleClass="input-field" visible="false" managed="false" prefWidth="250" />
+                            </HBox>
+                            <HBox alignment="CENTER_RIGHT" spacing="6" GridPane.rowIndex="1" GridPane.columnIndex="2">
+                                <Button fx:id="btnEditPhone" text="Edit" styleClass="btn-ghost" onAction="#onEditPhoneClicked" />
+                                <Button fx:id="btnSavePhone" text="Save" styleClass="btn-primary" onAction="#onSavePhoneClicked" visible="false" managed="false" />
+                                <Button fx:id="btnCancelPhone" text="Cancel" styleClass="btn-ghost" onAction="#onCancelPhoneClicked" visible="false" managed="false" />
+                            </HBox>
+
+                            <Label styleClass="field-label" text="Email Address:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                            <HBox alignment="CENTER_LEFT" spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                                <Label fx:id="lblEmailDisplay" styleClass="text-value" />
+                                <TextField fx:id="txtEmail" promptText="e.g. student@gmail.com" styleClass="input-field" visible="false" managed="false" prefWidth="250" />
+                            </HBox>
+                            <HBox alignment="CENTER_RIGHT" spacing="6" GridPane.rowIndex="2" GridPane.columnIndex="2">
+                                <Button fx:id="btnEditEmail" text="Edit" styleClass="btn-ghost" onAction="#onEditEmailClicked" />
+                                <Button fx:id="btnSaveEmail" text="Save" styleClass="btn-primary" onAction="#onSaveEmailClicked" visible="false" managed="false" />
+                                <Button fx:id="btnCancelEmail" text="Cancel" styleClass="btn-ghost" onAction="#onCancelEmailClicked" visible="false" managed="false" />
+                            </HBox>
+
+                            <Label styleClass="field-label" text="Student ID (Roll):" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                            <Label fx:id="lblStudentId" styleClass="text-highlight" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Department:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                            <Label fx:id="lblDepartment" styleClass="text-value" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Academic Year:" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+                            <Label fx:id="lblYear" styleClass="text-value" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+                        </GridPane>
+                    </VBox>
+
+                    <VBox styleClass="card" spacing="14">
+                        <Label styleClass="card-title" text="Current Hall &amp; Seat Allocation" />
+
+                        <GridPane hgap="16" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="130" prefWidth="130" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                            </columnConstraints>
+
+                            <Label styleClass="field-label" text="Current Hall:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                            <Label fx:id="lblCurrentHall" styleClass="text-highlight" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Room Number:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                            <Label fx:id="lblCurrentRoom" styleClass="text-value" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Seat Number:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                            <Label fx:id="lblCurrentSeat" styleClass="text-value" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                        </GridPane>
+                    </VBox>
+
+                    <VBox styleClass="card" spacing="14" VBox.vgrow="ALWAYS">
+                        <Label styleClass="card-title" text="Historical Residence Records" />
+
+                        <TableView fx:id="tableHistory" prefHeight="220">
+                            <columns>
+                                <TableColumn fx:id="colHall" text="Hall Name" prefWidth="240" />
+                                <TableColumn fx:id="colRoom" text="Room No" prefWidth="90" />
+                                <TableColumn fx:id="colSeat" text="Seat" prefWidth="80" />
+                                <TableColumn fx:id="colFrom" text="Allocated Date" prefWidth="120" />
+                                <TableColumn fx:id="colTo"   text="Vacated Date" prefWidth="120" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <HBox styleClass="status-strip">
+                <Label text="●" styleClass="status-dot-active" />
+                <Label styleClass="status-strip-text" text="Student Record Synchronized · Live DB Connected" />
+            </HBox>
+
+            <HBox styleClass="university-footer">
+                <Label styleClass="university-footer-text" text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

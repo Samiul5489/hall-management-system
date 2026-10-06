@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hallmanagement.controller.StudentHallChangeController"
+            styleClass="dashboard-root"
+            stylesheets="@../css/dashboard.css"
+            minWidth="960" minHeight="640">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="250" spacing="0">
+            <VBox styleClass="sidebar-header" spacing="4">
+                <Label styleClass="sidebar-app-name" text="RUET Hall System" />
+                <Label styleClass="sidebar-portal"   text="STUDENT PORTAL" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-width: 0;" VBox.vgrow="ALWAYS">
+                <VBox styleClass="sidebar-nav" spacing="3">
+                    <Label styleClass="nav-section-label" text="MAIN NAVIGATION" />
+                    <Button fx:id="btnNavDashboard" styleClass="nav-button" text="🏠  Dashboard" onAction="#onDashboardClicked" />
+                    <Button fx:id="btnNavProfile"   styleClass="nav-button" text="👤  My Profile" onAction="#onProfileClicked" />
+                    <Button fx:id="btnNavHallInfo"  styleClass="nav-button" text="🏢  Hall Information" onAction="#onHallInformationClicked" />
+                    <Button fx:id="btnNavBilling"   styleClass="nav-button" text="💳  Bill &amp; Due" onAction="#onBillingClicked" />
+                    <Button fx:id="btnNavNoticeBoard" styleClass="nav-button" text="📢  Notice Board" onAction="#onNoticeBoardClicked" />
+
+                    <Region prefHeight="10" />
+
+                    <Label styleClass="nav-section-label" text="RESIDENCE SERVICES" />
+                    <Button fx:id="btnNavHallChange" styleClass="nav-button-active" text="🔄  Apply for New Hall" />
+                    <Button fx:id="btnNavRoomChange" styleClass="nav-button" text="🛏  Room/Seat Change" onAction="#onRoomChangeClicked" />
+                    <Button fx:id="btnNavComplaints" styleClass="nav-button" text="📝  Complaints" onAction="#onComplaintsClicked" />
+                    <Button fx:id="btnNavHallLeave"  styleClass="nav-button" text="🚪  Hall Leave" onAction="#onHallLeaveClicked" />
+                </VBox>
+            </ScrollPane>
+
+            <VBox styleClass="sidebar-footer" alignment="BOTTOM_CENTER">
+                <Label fx:id="lblSidebarUser" styleClass="sidebar-footer-text" />
+                <Label fx:id="lblSidebarRole" styleClass="sidebar-footer-text" />
+                <Region prefHeight="6" />
+                <Button fx:id="btnLogout"
+                        styleClass="btn-logout"
+                        text="⏻  Sign Out"
+                        maxWidth="Infinity"
+                        onAction="#onLogoutClicked" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+
+            <HBox styleClass="top-header-bar">
+                <Button text="← Back" styleClass="btn-top-back" onAction="#onBackClicked" />
+                <Label styleClass="top-header-title" text="Inter-Hall Transfer Application" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="🔄 Refresh" styleClass="btn-ghost" onAction="#onRefreshClicked" />
+            </HBox>
+
+            <ScrollPane fitToWidth="true" fitToHeight="false" styleClass="main-scroll" VBox.vgrow="ALWAYS">
+                <VBox styleClass="main-content-fluid" spacing="18">
+
+                    <HBox styleClass="welcome-hero" alignment="CENTER_LEFT" spacing="18">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="RESIDENCE TRANSFER SERVICES" styleClass="welcome-badge" />
+                            <Label text="Apply for New Hall / Inter-Hall Transfer" styleClass="welcome-name" />
+                            <Label text="Submit an official request to transfer residence to another RUET hall. Dues must be cleared before applying." styleClass="welcome-meta" wrapText="true" />
+                        </VBox>
+                    </HBox>
+
+                    <VBox fx:id="boxEligibilityBanner" styleClass="card" spacing="10">
+                        <HBox alignment="CENTER_LEFT" spacing="14">
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label fx:id="lblEligibilityTitle" text="Checking Eligibility..." styleClass="card-title" />
+                                <Label fx:id="lblEligibilityMessage" text="" style="-fx-font-size: 12px; -fx-text-fill: #94a3b8;" wrapText="true" />
+                            </VBox>
+                            <HBox fx:id="boxPendingActions" spacing="8" alignment="CENTER_RIGHT" visible="false" managed="false" HBox.hgrow="NEVER">
+                                <Button fx:id="btnEditPendingRequest" text="✏ Edit Request" styleClass="btn-ghost" onAction="#onEditPendingRequestClicked" />
+                                <Button fx:id="btnCancelPendingRequest" text="❌ Cancel Request" styleClass="btn-danger" onAction="#onCancelPendingRequestClicked" />
+                            </HBox>
+                            <Button fx:id="btnPayDueAction" text="Clear Dues in Bill &amp; Due →" styleClass="btn-primary" onAction="#onBillingClicked" visible="false" managed="false" HBox.hgrow="NEVER" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox fx:id="boxApplicationForm" styleClass="card" spacing="16" visible="false" managed="false">
+                        <Label text="New Hall Transfer Details" styleClass="card-title" />
+
+                        <GridPane hgap="20" vgap="14">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="50" />
+                                <ColumnConstraints percentWidth="50" />
+                            </columnConstraints>
+
+                            <VBox spacing="10" styleClass="form-subcard" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <Label text="CURRENT RESIDENCE ALLOCATION" styleClass="text-highlight" />
+
+                                <VBox spacing="2">
+                                    <Label text="Current Hall:" styleClass="field-label" />
+                                    <Label fx:id="lblCurHall" text="Loading..." styleClass="text-value-bold" />
+                                </VBox>
+
+                                <HBox spacing="20">
+                                    <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                        <Label text="Current Room:" styleClass="field-label" />
+                                        <Label fx:id="lblCurRoom" text="Loading..." styleClass="text-value-bold" />
+                                    </VBox>
+                                    <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                        <Label text="Current Seat:" styleClass="field-label" />
+                                        <Label fx:id="lblCurSeat" text="Loading..." styleClass="text-value-bold" />
+                                    </VBox>
+                                </HBox>
+
+                                <Label text="🔒 Current residence is fetched from the official database." styleClass="text-muted" />
+                            </VBox>
+
+                            <VBox spacing="10" styleClass="form-subcard-highlight" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                <Label text="DESIRED NEW RESIDENCE" styleClass="text-highlight-green" />
+
+                                <VBox spacing="4">
+                                    <Label text="Select New Hall *:" styleClass="field-label" />
+                                    <ComboBox fx:id="cmbNewHall" promptText="-- Choose Available Hall --" maxWidth="Infinity" styleClass="combo-field" onAction="#onNewHallSelected" />
+                                </VBox>
+
+                                <VBox spacing="4">
+                                    <Label text="Select Available Room *:" styleClass="field-label" />
+                                    <ComboBox fx:id="cmbNewRoom" promptText="-- Choose Room --" maxWidth="Infinity" styleClass="combo-field" onAction="#onNewRoomSelected" disable="true" />
+                                </VBox>
+
+                                <VBox spacing="4">
+                                    <Label text="Select Available Seat *:" styleClass="field-label" />
+                                    <ComboBox fx:id="cmbNewSeat" promptText="-- Choose Seat --" maxWidth="Infinity" styleClass="combo-field" disable="true" />
+                                </VBox>
+                            </VBox>
+                        </GridPane>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="14">
+                            <Label fx:id="lblFormFeedback" text="" styleClass="status-error" HBox.hgrow="ALWAYS" wrapText="true" />
+                            <Button fx:id="btnSubmitRequest" text="Submit Transfer Application" styleClass="btn-primary" onAction="#onSubmitRequestClicked" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="card" spacing="12" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="Your Hall Change History" styleClass="card-title" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label fx:id="lblHistoryCount" text="0 total requests" style="-fx-font-size: 12px; -fx-text-fill: #94a3b8;" />
+                        </HBox>
+
+                        <TableView fx:id="tableHistory" minHeight="260">
+                            <columns>
+                                <TableColumn fx:id="colSerial" text="Serial" minWidth="65" prefWidth="70" style="-fx-alignment: CENTER;" />
+                                <TableColumn fx:id="colCode" text="Request Code" minWidth="120" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                <TableColumn fx:id="colDate" text="Date Submitted" minWidth="120" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                <TableColumn fx:id="colCurResidence" text="Current Residence" minWidth="200" prefWidth="240" />
+                                <TableColumn fx:id="colReqResidence" text="Requested Residence" minWidth="200" prefWidth="250" />
+                                <TableColumn fx:id="colStatus" text="Status" minWidth="120" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                <TableColumn fx:id="colRemarks" text="Provost Note / Rejection Reason" minWidth="240" prefWidth="300" />
+                            </columns>
+                            <placeholder>
+                                <Label text="No hall change requests submitted yet." style="-fx-text-fill: #64748b; -fx-font-size: 13px;" />
+                            </placeholder>
+                        </TableView>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <HBox styleClass="status-strip">
+                <Label text="●" styleClass="status-dot-active" />
+                <Label styleClass="status-strip-text" text="Residence Transfer Service Synchronized · Live DB Connected" />
+            </HBox>
+
+            <HBox styleClass="university-footer">
+                <Label styleClass="university-footer-text" text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

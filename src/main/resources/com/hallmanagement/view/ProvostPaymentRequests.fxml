@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hallmanagement.controller.ProvostPaymentRequestsController"
+            styleClass="dashboard-root"
+            stylesheets="@../css/dashboard.css"
+            minWidth="960" minHeight="640">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="250" spacing="0">
+            <VBox styleClass="sidebar-header" spacing="4">
+                <Label styleClass="sidebar-app-name" text="RUET Hall System" />
+                <Label styleClass="sidebar-portal"   text="PROVOST PORTAL" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-width: 0;" VBox.vgrow="ALWAYS">
+                <VBox styleClass="sidebar-nav" spacing="3">
+                    <Label styleClass="nav-section-label" text="ADMINISTRATION" />
+                    <Button styleClass="nav-button" text="🏠  Dashboard" onAction="#onDashboardClicked" />
+                    <Button styleClass="nav-button" text="👤  My Profile" onAction="#onProfileClicked" />
+                    <Button styleClass="nav-button" text="🏢  Hall Information" onAction="#onHallInformationClicked" />
+                    <Button styleClass="nav-button" text="📢  Notice Board" onAction="#onNoticeBoardClicked" />
+
+                    <Region prefHeight="10" />
+
+                    <Label styleClass="nav-section-label" text="STUDENT REQUESTS" />
+                    <Button fx:id="btnNavPaymentRequests" styleClass="nav-button-active" text="💳  Payment Requests" />
+                    <Button fx:id="btnNavHallChangeRequests" styleClass="nav-button" text="🔄  Hall Transfers" onAction="#onHallChangeRequestsClicked" />
+                    <Button fx:id="btnNavRoomChangeRequests" styleClass="nav-button" text="🛏  Room/Seat Changes" onAction="#onRoomChangeRequestsClicked" />
+                    <Button fx:id="btnNavComplaints" styleClass="nav-button" text="📝  Complaints" onAction="#onComplaintsClicked" />
+                    <Button fx:id="btnNavHallLeaveRequests" styleClass="nav-button" text="🚪  Hall Leave Requests" onAction="#onHallLeaveRequestsClicked" />
+                </VBox>
+            </ScrollPane>
+
+            <VBox styleClass="sidebar-footer" alignment="BOTTOM_CENTER">
+                <Label fx:id="lblSidebarUser" styleClass="sidebar-footer-text" />
+                <Label fx:id="lblSidebarRole" styleClass="sidebar-footer-text" />
+                <Region prefHeight="6" />
+                <Button fx:id="btnLogout"
+                        styleClass="btn-logout"
+                        text="⏻  Sign Out"
+                        maxWidth="Infinity"
+                        onAction="#onLogoutClicked" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+
+            <HBox styleClass="top-header-bar">
+                <Button text="← Back" styleClass="btn-top-back" onAction="#onBackClicked" />
+                <Label styleClass="top-header-title" text="Payment Requests &amp; Verification" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="🔄 Refresh" styleClass="btn-ghost" onAction="#onRefreshClicked" />
+            </HBox>
+
+            <ScrollPane fitToWidth="true" fitToHeight="false" styleClass="main-scroll" VBox.vgrow="ALWAYS">
+                <VBox styleClass="main-content-fluid" spacing="18">
+
+                    <HBox spacing="14" alignment="CENTER_LEFT">
+                        <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="4">
+                            <Label styleClass="section-badge" text="ASSIGNED HALL" />
+                            <Label fx:id="lblAssignedHall" styleClass="text-highlight" text="Loading..." wrapText="true" />
+                            <Label fx:id="lblProvostName" styleClass="text-muted" text="" />
+                        </VBox>
+
+                        <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="4">
+                            <Label styleClass="section-badge" text="PENDING VERIFICATION" />
+                            <Label fx:id="lblPendingCount" style="-fx-font-size: 22px; -fx-font-weight: 700;" styleClass="text-highlight-amber" text="0" />
+                            <Label styleClass="text-muted" text="Slips Awaiting Approval" />
+                        </VBox>
+
+                        <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="4">
+                            <Label styleClass="section-badge" text="CONFIRMED PAYMENTS" />
+                            <Label fx:id="lblApprovedCount" style="-fx-font-size: 22px; -fx-font-weight: 700;" styleClass="text-highlight-green" text="0" />
+                            <Label styleClass="text-muted" text="Approved Slips" />
+                        </VBox>
+
+                        <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="4">
+                            <Label styleClass="section-badge" text="COLLECTED FUNDS (৳)" />
+                            <Label fx:id="lblApprovedAmountTotal" style="-fx-font-size: 22px; -fx-font-weight: 700;" styleClass="text-highlight" text="৳0.00" />
+                            <Label styleClass="text-muted" text="Total Confirmed" />
+                        </VBox>
+                    </HBox>
+
+                    <VBox styleClass="card" spacing="12" VBox.vgrow="ALWAYS">
+                        <TabPane fx:id="tabPanePayments" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+
+                            <Tab text="Pending Verification Requests">
+                                <VBox spacing="12" style="-fx-padding: 14 0 0 0;">
+                                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                                        <Button fx:id="btnViewDetails" text="👁 View Full Details" styleClass="btn-ghost" onAction="#onViewDetailsClicked" />
+                                        <Button fx:id="btnRejectSelected" text="❌ Reject Slip" styleClass="btn-danger" onAction="#onRejectSelectedClicked" />
+                                        <Button fx:id="btnApproveSelected" text="✓ Verify &amp; Confirm Payment" styleClass="btn-primary" onAction="#onApproveSelectedClicked" />
+                                    </HBox>
+
+                                    <TableView fx:id="tablePendingRequests" minHeight="300" VBox.vgrow="ALWAYS">
+                                        <columns>
+                                            <TableColumn fx:id="colReqCode" text="Req Code" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colStudentName" text="Student Name" minWidth="130" prefWidth="150" />
+                                            <TableColumn fx:id="colStudentRoll" text="Roll" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colStudentDept" text="Dept" minWidth="65" prefWidth="75" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colRoomSeat" text="Room/Seat" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colBillingPeriod" text="Period" minWidth="110" prefWidth="120" />
+                                            <TableColumn fx:id="colAmount" text="Amount (৳)" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER-RIGHT;" />
+                                            <TableColumn fx:id="colRequestDate" text="Date Submitted" minWidth="110" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colStatus" text="Status" minWidth="95" prefWidth="105" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                        <placeholder>
+                                            <Label text="No pending payment requests awaiting approval." style="-fx-text-fill: #64748b; -fx-font-size: 13px;" />
+                                        </placeholder>
+                                    </TableView>
+                                </VBox>
+                            </Tab>
+
+                            <Tab text="Confirmed Payment History">
+                                <VBox spacing="12" style="-fx-padding: 14 0 0 0;">
+                                    <TextField fx:id="txtSearchHistory" promptText="🔍  Search by student name, roll, or payment code..."
+                                               styleClass="input-field" onKeyReleased="#onSearchHistoryChanged" />
+
+                                    <TableView fx:id="tablePaymentHistory" minHeight="300" VBox.vgrow="ALWAYS">
+                                        <columns>
+                                            <TableColumn fx:id="colHistCode" text="Payment Code" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colHistStudentName" text="Student Name" minWidth="130" prefWidth="150" />
+                                            <TableColumn fx:id="colHistRoll" text="Roll" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colHistResidence" text="Room/Seat" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colHistPeriod" text="Period" minWidth="110" prefWidth="120" />
+                                            <TableColumn fx:id="colHistAmount" text="Amount (৳)" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER-RIGHT;" />
+                                            <TableColumn fx:id="colHistDate" text="Payment Date" minWidth="110" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colHistStatus" text="Status" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                        <placeholder>
+                                            <Label text="No confirmed payment records in this hall yet." style="-fx-text-fill: #64748b; -fx-font-size: 13px;" />
+                                        </placeholder>
+                                    </TableView>
+                                </VBox>
+                            </Tab>
+
+                        </TabPane>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <HBox styleClass="status-strip">
+                <Label text="●" styleClass="status-dot-active" />
+                <Label styleClass="status-strip-text" text="Payment Verification Ledger Synchronized · Live DB Connected" />
+            </HBox>
+
+            <HBox styleClass="university-footer">
+                <Label styleClass="university-footer-text" text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

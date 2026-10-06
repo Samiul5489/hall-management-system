@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hallmanagement.controller.ProvostDashboardController"
+            styleClass="dashboard-root"
+            stylesheets="@../css/dashboard.css"
+            minWidth="960" minHeight="640">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="250" spacing="0">
+
+            <VBox styleClass="sidebar-header" spacing="4">
+                <Label styleClass="sidebar-app-name" text="RUET Hall System" />
+                <Label styleClass="sidebar-portal"   text="PROVOST PORTAL" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-width: 0;" VBox.vgrow="ALWAYS">
+                <VBox styleClass="sidebar-nav" spacing="3">
+                    <Label styleClass="nav-section-label" text="ADMINISTRATION" />
+                    <Button styleClass="nav-button-active" text="🏠  Dashboard" />
+                    <Button fx:id="btnNavProfile" styleClass="nav-button" text="👤  Provost Profile" onAction="#onProfileClicked" />
+                    <Button fx:id="btnNavHallInfo" styleClass="nav-button" text="🏢  Hall Information" onAction="#onHallInformationClicked" />
+                    <Button fx:id="btnNavNoticeBoard" styleClass="nav-button" text="📢  Notice Board" onAction="#onNoticeBoardClicked" />
+
+                    <Region prefHeight="10" />
+
+                    <Label styleClass="nav-section-label" text="STUDENT REQUESTS" />
+                    <Button fx:id="btnNavPaymentRequests" styleClass="nav-button" text="💳  Payment Requests" onAction="#onPaymentRequestsClicked" />
+                    <Button fx:id="btnNavHallChangeRequests" styleClass="nav-button" text="🔄  Hall Transfers" onAction="#onHallChangeRequestsClicked" />
+                    <Button fx:id="btnNavRoomChangeRequests" styleClass="nav-button" text="🛏  Room/Seat Changes" onAction="#onRoomChangeRequestsClicked" />
+                    <Button fx:id="btnNavComplaints" styleClass="nav-button" text="📝  Complaints" onAction="#onComplaintsClicked" />
+                    <Button fx:id="btnNavHallLeaveRequests"  styleClass="nav-button" text="🚪  Hall Leave Requests" onAction="#onHallLeaveRequestsClicked" />
+                </VBox>
+            </ScrollPane>
+
+            <VBox styleClass="sidebar-footer" alignment="BOTTOM_CENTER">
+                <Button fx:id="btnLogout"
+                        styleClass="btn-logout"
+                        text="⏻  Sign Out"
+                        maxWidth="Infinity"
+                        onAction="#onLogoutClicked" />
+            </VBox>
+
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+
+            <HBox styleClass="top-header-bar">
+                <Label styleClass="top-header-title" text="Provost Administration Dashboard" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblLiveClock" styleClass="lbl-live-clock" text="Loading clock..." />
+            </HBox>
+
+            <ScrollPane fitToWidth="true" fitToHeight="false" styleClass="main-scroll" VBox.vgrow="ALWAYS">
+                <VBox styleClass="main-content-fluid" spacing="18">
+
+                    <HBox styleClass="welcome-hero" alignment="CENTER_LEFT" spacing="18">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label styleClass="welcome-badge" text="ADMINISTRATOR" />
+                                <Label fx:id="lblRole" styleClass="welcome-meta" text="Role: Provost / Admin" />
+                            </HBox>
+                            <Label fx:id="lblWelcome" styleClass="welcome-name" text="Welcome, Provost!" wrapText="true" />
+                            <Label fx:id="lblUserId" styleClass="welcome-meta" text="Provost ID: provost001" />
+                        </VBox>
+                        <Button text="View Profile →" styleClass="btn-secondary" onAction="#onProfileClicked" />
+                    </HBox>
+
+                    <VBox styleClass="dashboard-notice-hero">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="📢" style="-fx-font-size: 18px;" />
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Notice Board Management &amp; Official Broadcasts" style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #f8fafc;" />
+                                <Label text="Publish, update, or broadcast residential guidelines and administrative announcements to students." style="-fx-font-size: 12px; -fx-text-fill: #94a3b8;" />
+                            </VBox>
+                            <Button text="Manage Notices →" styleClass="btn-primary" onAction="#onNoticeBoardClicked" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox spacing="10">
+                        <Label text="STUDENT RESIDENCE REQUESTS &amp; APPROVALS" styleClass="section-badge" />
+
+                        <HBox spacing="12" alignment="CENTER" maxWidth="Infinity">
+                            <VBox styleClass="dashboard-action-card" alignment="CENTER" spacing="6" HBox.hgrow="ALWAYS" onMouseClicked="#onPaymentRequestsClicked">
+                                <Label text="💳" style="-fx-font-size: 20px;" />
+                                <Label styleClass="action-card-title" text="Payment Requests" />
+                                <Label fx:id="lblPaymentRequestsCardDesc" styleClass="action-card-desc" text="Cash slips &amp; transactions." textAlignment="CENTER" />
+                                <Button fx:id="btnCardPaymentRequests" text="Review Payments →" styleClass="btn-outline-small" onAction="#onPaymentRequestsClicked" />
+                            </VBox>
+
+                            <VBox styleClass="dashboard-action-card" alignment="CENTER" spacing="6" HBox.hgrow="ALWAYS" onMouseClicked="#onHallChangeRequestsClicked">
+                                <Label text="🔄" style="-fx-font-size: 20px;" />
+                                <Label styleClass="action-card-title" text="Hall Transfers" />
+                                <Label fx:id="lblHallChangeCardDesc" styleClass="action-card-desc" text="Inter-hall transfer applications." textAlignment="CENTER" />
+                                <Button fx:id="btnCardHallChange" text="Review Transfers →" styleClass="btn-outline-small" onAction="#onHallChangeRequestsClicked" />
+                            </VBox>
+
+                            <VBox styleClass="dashboard-action-card" alignment="CENTER" spacing="6" HBox.hgrow="ALWAYS" onMouseClicked="#onRoomChangeRequestsClicked">
+                                <Label text="🛏" style="-fx-font-size: 20px;" />
+                                <Label styleClass="action-card-title" text="Room/Seat Changes" />
+                                <Label fx:id="lblRoomChangeCardDesc" styleClass="action-card-desc" text="Seat exchange requests." textAlignment="CENTER" />
+                                <Button fx:id="btnCardRoomChange" text="Review Rooms →" styleClass="btn-outline-small" onAction="#onRoomChangeRequestsClicked" />
+                            </VBox>
+                        </HBox>
+
+                        <HBox spacing="12" alignment="CENTER" maxWidth="Infinity">
+                            <VBox styleClass="dashboard-action-card" alignment="CENTER" spacing="6" HBox.hgrow="ALWAYS" onMouseClicked="#onComplaintsClicked">
+                                <Label text="📝" style="-fx-font-size: 20px;" />
+                                <Label styleClass="action-card-title" text="Student Complaints" />
+                                <Label fx:id="lblComplaintsCardDesc" styleClass="action-card-desc" text="Resolve grievances &amp; queries." textAlignment="CENTER" />
+                                <Button fx:id="btnCardComplaints" text="Review Complaints →" styleClass="btn-outline-small" onAction="#onComplaintsClicked" />
+                            </VBox>
+
+                            <VBox styleClass="dashboard-action-card" alignment="CENTER" spacing="6" HBox.hgrow="ALWAYS" onMouseClicked="#onHallLeaveRequestsClicked">
+                                <Label text="🚪" style="-fx-font-size: 20px;" />
+                                <Label styleClass="action-card-title" text="Hall Leave Requests" />
+                                <Label fx:id="lblHallLeaveCardDesc" styleClass="action-card-desc" text="Clearance and seat release." textAlignment="CENTER" />
+                                <Button fx:id="btnCardHallLeave" text="Review Clearance →" styleClass="btn-outline-small" onAction="#onHallLeaveRequestsClicked" />
+                            </VBox>
+
+                            <VBox styleClass="dashboard-action-card" alignment="CENTER" spacing="6" HBox.hgrow="ALWAYS" onMouseClicked="#onHallInformationClicked">
+                                <Label text="🏢" style="-fx-font-size: 20px;" />
+                                <Label styleClass="action-card-title" text="Hall Information" />
+                                <Label styleClass="action-card-desc" text="Live seat maps &amp; occupancy." textAlignment="CENTER" />
+                                <Button text="Explore Halls →" styleClass="btn-outline-small" onAction="#onHallInformationClicked" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <HBox styleClass="status-strip">
+                <Label text="●" styleClass="status-dot-active" />
+                <Label styleClass="status-strip-text" text="System Status: Connected · Provost Session Active · Live DB Connected" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label styleClass="status-strip-text" text="RUET Administrative ERP" />
+            </HBox>
+
+            <HBox styleClass="university-footer">
+                <Label styleClass="university-footer-text" text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

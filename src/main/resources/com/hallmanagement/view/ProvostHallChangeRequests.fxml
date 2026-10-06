@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hallmanagement.controller.ProvostHallChangeRequestsController"
+            styleClass="dashboard-root"
+            stylesheets="@../css/dashboard.css"
+            minWidth="960" minHeight="640">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="250" spacing="0">
+            <VBox styleClass="sidebar-header" spacing="4">
+                <Label styleClass="sidebar-app-name" text="RUET Hall System" />
+                <Label styleClass="sidebar-portal"   text="PROVOST PORTAL" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-width: 0;" VBox.vgrow="ALWAYS">
+                <VBox styleClass="sidebar-nav" spacing="3">
+                    <Label styleClass="nav-section-label" text="ADMINISTRATION" />
+                    <Button fx:id="btnNavDashboard" styleClass="nav-button" text="🏠  Dashboard" onAction="#onDashboardClicked" />
+                    <Button fx:id="btnNavHallInfo"  styleClass="nav-button" text="🏢  Hall Information" onAction="#onHallInformationClicked" />
+                    <Button fx:id="btnNavNoticeBoard" styleClass="nav-button" text="📢  Notice Board" onAction="#onNoticeBoardClicked" />
+
+                    <Region prefHeight="10" />
+
+                    <Label styleClass="nav-section-label" text="STUDENT REQUESTS" />
+                    <Button fx:id="btnNavPaymentRequests" styleClass="nav-button" text="💳  Payment Requests" onAction="#onPaymentRequestsClicked" />
+                    <Button fx:id="btnNavHallChangeRequests" styleClass="nav-button-active" text="🔄  Hall Transfers" />
+                    <Button fx:id="btnNavRoomChangeRequests" styleClass="nav-button" text="🛏  Room/Seat Changes" onAction="#onRoomChangeRequestsClicked" />
+                    <Button fx:id="btnNavComplaints" styleClass="nav-button" text="📝  Complaints" onAction="#onComplaintsClicked" />
+                    <Button fx:id="btnNavHallLeaveRequests" styleClass="nav-button" text="🚪  Hall Leave Requests" onAction="#onHallLeaveRequestsClicked" />
+                </VBox>
+            </ScrollPane>
+
+            <VBox styleClass="sidebar-footer" alignment="BOTTOM_CENTER">
+                <Label fx:id="lblSidebarUser" styleClass="sidebar-footer-text" />
+                <Label fx:id="lblSidebarRole" styleClass="sidebar-footer-text" />
+                <Region prefHeight="6" />
+                <Button fx:id="btnLogout"
+                        styleClass="btn-logout"
+                        text="⏻  Sign Out"
+                        maxWidth="Infinity"
+                        onAction="#onLogoutClicked" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+
+            <HBox styleClass="top-header-bar">
+                <Button text="← Back" styleClass="btn-top-back" onAction="#onBackClicked" />
+                <Label styleClass="top-header-title" text="Hall Change &amp; Transfer Requests" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="🔄 Refresh" styleClass="btn-ghost" onAction="#onRefreshClicked" />
+            </HBox>
+
+            <ScrollPane fitToWidth="true" fitToHeight="false" styleClass="main-scroll" VBox.vgrow="ALWAYS">
+                <VBox styleClass="main-content-fluid" spacing="18">
+
+                    <HBox styleClass="welcome-hero" alignment="CENTER_LEFT" spacing="18">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="TRANSFER APPROVAL DESK" styleClass="welcome-badge" />
+                            <Label text="Student Inter-Hall Transfer Applications" styleClass="welcome-name" />
+                            <Label text="Review, verify student dues clearance, and process inter-hall seat transfer requests." styleClass="welcome-meta" wrapText="true" />
+                        </VBox>
+                        <HBox spacing="14" alignment="CENTER_RIGHT">
+                            <VBox styleClass="stat-subcard" alignment="CENTER" spacing="2">
+                                <Label text="Pending" styleClass="section-badge" />
+                                <Label fx:id="lblPendingCount" text="0" style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #fbbf24;" />
+                            </VBox>
+                            <VBox styleClass="stat-subcard" alignment="CENTER" spacing="2">
+                                <Label text="Processed" styleClass="section-badge" />
+                                <Label fx:id="lblApprovedCount" text="0" style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #4ade80;" />
+                            </VBox>
+                        </HBox>
+                    </HBox>
+
+                    <VBox styleClass="card" spacing="12" VBox.vgrow="ALWAYS">
+                        <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+
+                            <Tab text="Pending Transfer Applications">
+                                <VBox spacing="12" style="-fx-padding: 14 0 0 0;">
+                                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                                        <Button text="👁 View Full Details" styleClass="btn-ghost" onAction="#onViewDetailsClicked" />
+                                        <Button text="❌ Reject Transfer" styleClass="btn-danger" onAction="#onRejectSelectedClicked" />
+                                        <Button text="✓ Approve &amp; Execute Transfer" styleClass="btn-primary" onAction="#onApproveSelectedClicked" />
+                                    </HBox>
+
+                                    <TableView fx:id="tablePendingRequests" minHeight="320" VBox.vgrow="ALWAYS">
+                                        <columns>
+                                            <TableColumn fx:id="colPendSerial" text="Serial" minWidth="60" prefWidth="65" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colPendCode" text="Request Code" minWidth="110" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colPendDate" text="Date Submitted" minWidth="110" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colPendStudent" text="Student Name" minWidth="130" prefWidth="150" />
+                                            <TableColumn fx:id="colPendRoll" text="Roll" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colPendDept" text="Dept" minWidth="65" prefWidth="75" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colPendCurResidence" text="Current Residence" minWidth="170" prefWidth="200" />
+                                            <TableColumn fx:id="colPendReqResidence" text="Requested Residence" minWidth="170" prefWidth="200" />
+                                        </columns>
+                                        <placeholder>
+                                            <Label text="No pending hall change requests to review." style="-fx-text-fill: #64748b; -fx-font-size: 13px;" />
+                                        </placeholder>
+                                    </TableView>
+                                </VBox>
+                            </Tab>
+
+                            <Tab text="Processed Transfer History">
+                                <VBox spacing="12" style="-fx-padding: 14 0 0 0;">
+                                    <TextField fx:id="txtSearchHistory" promptText="🔍  Search history by student name, roll, or request code..."
+                                               styleClass="input-field" onKeyReleased="#onSearchHistoryChanged" />
+
+                                    <TableView fx:id="tableHistory" minHeight="320" VBox.vgrow="ALWAYS">
+                                        <columns>
+                                            <TableColumn fx:id="colHistSerial" text="Serial" minWidth="60" prefWidth="65" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colHistCode" text="Request Code" minWidth="110" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colHistDate" text="Date Submitted" minWidth="110" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colHistStudent" text="Student Name" minWidth="130" prefWidth="150" />
+                                            <TableColumn fx:id="colHistCurResidence" text="Previous Residence" minWidth="160" prefWidth="180" />
+                                            <TableColumn fx:id="colHistReqResidence" text="Target Residence" minWidth="160" prefWidth="180" />
+                                            <TableColumn fx:id="colHistStatus" text="Decision" minWidth="95" prefWidth="105" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colHistRemarks" text="Provost Note / Rejection Reason" minWidth="200" prefWidth="240" />
+                                        </columns>
+                                        <placeholder>
+                                            <Label text="No processed transfer history records." style="-fx-text-fill: #64748b; -fx-font-size: 13px;" />
+                                        </placeholder>
+                                    </TableView>
+                                </VBox>
+                            </Tab>
+
+                        </TabPane>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <HBox styleClass="status-strip">
+                <Label text="●" styleClass="status-dot-active" />
+                <Label styleClass="status-strip-text" text="Transfer Request Desk Synchronized · Live DB Connected" />
+            </HBox>
+
+            <HBox styleClass="university-footer">
+                <Label styleClass="university-footer-text" text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

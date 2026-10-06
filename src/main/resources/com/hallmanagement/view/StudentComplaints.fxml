@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hallmanagement.controller.StudentComplaintsController"
+            styleClass="dashboard-root"
+            stylesheets="@../css/dashboard.css"
+            minWidth="960" minHeight="640">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="250" spacing="0">
+            <VBox styleClass="sidebar-header" spacing="4">
+                <Label styleClass="sidebar-app-name" text="RUET Hall System" />
+                <Label styleClass="sidebar-portal"   text="STUDENT PORTAL" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-width: 0;" VBox.vgrow="ALWAYS">
+                <VBox styleClass="sidebar-nav" spacing="3">
+                    <Label styleClass="nav-section-label" text="MAIN NAVIGATION" />
+                    <Button fx:id="btnNavDashboard" styleClass="nav-button" text="🏠  Dashboard" onAction="#onDashboardClicked" />
+                    <Button fx:id="btnNavProfile"   styleClass="nav-button" text="👤  My Profile" onAction="#onMyProfileClicked" />
+                    <Button fx:id="btnNavHallInfo"  styleClass="nav-button" text="🏢  Hall Information" onAction="#onHallInformationClicked" />
+                    <Button fx:id="btnNavBilling"   styleClass="nav-button" text="💳  Bill &amp; Due" onAction="#onBillingClicked" />
+                    <Button fx:id="btnNavNoticeBoard" styleClass="nav-button" text="📢  Notice Board" onAction="#onNoticeBoardClicked" />
+
+                    <Region prefHeight="10" />
+
+                    <Label styleClass="nav-section-label" text="RESIDENCE SERVICES" />
+                    <Button fx:id="btnNavHallChange" styleClass="nav-button" text="🔄  Apply for New Hall" onAction="#onHallChangeClicked" />
+                    <Button fx:id="btnNavRoomChange" styleClass="nav-button" text="🛏  Room/Seat Change" onAction="#onRoomChangeClicked" />
+                    <Button fx:id="btnNavComplaints" styleClass="nav-button-active" text="📝  Complaints" />
+                    <Button fx:id="btnNavHallLeave"  styleClass="nav-button" text="🚪  Hall Leave" onAction="#onHallLeaveClicked" />
+                </VBox>
+            </ScrollPane>
+
+            <VBox styleClass="sidebar-footer" alignment="BOTTOM_CENTER">
+                <Label fx:id="lblSidebarUser" styleClass="sidebar-footer-text" />
+                <Label fx:id="lblSidebarRole" styleClass="sidebar-footer-text" />
+                <Region prefHeight="6" />
+                <Button fx:id="btnLogout"
+                        styleClass="btn-logout"
+                        text="⏻  Sign Out"
+                        maxWidth="Infinity"
+                        onAction="#onLogoutClicked" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+
+            <HBox styleClass="top-header-bar">
+                <Button text="← Back" styleClass="btn-top-back" onAction="#onBackClicked" />
+                <Label styleClass="top-header-title" text="Complaints &amp; Grievances Portal" />
+                <Region HBox.hgrow="ALWAYS" />
+                <HBox spacing="8" alignment="CENTER_RIGHT">
+                    <Button fx:id="btnToggleNewComplaint" text="+ File Complaint" styleClass="btn-primary" onAction="#onToggleNewComplaintClicked" />
+                    <Button text="🔄 Refresh" styleClass="btn-ghost" onAction="#onRefreshClicked" />
+                </HBox>
+            </HBox>
+
+            <ScrollPane fitToWidth="true" fitToHeight="false" styleClass="main-scroll" VBox.vgrow="ALWAYS">
+                <VBox styleClass="main-content-fluid" spacing="18">
+
+                    <HBox styleClass="welcome-hero" alignment="CENTER_LEFT" spacing="18">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="OFFICIAL GRIEVANCE REDRESSAL" styleClass="welcome-badge" />
+                            <Label text="Student Grievance &amp; Issue Resolution" styleClass="welcome-name" />
+                            <Label text="Submit official residence issues, maintenance requests, or complaints directly to your Hall Provost." styleClass="welcome-meta" wrapText="true" />
+                        </VBox>
+                    </HBox>
+
+                    <VBox fx:id="boxComplaintForm" styleClass="card" spacing="14" visible="false" managed="false">
+                        <Label fx:id="lblFormTitle" text="Submit New Official Complaint" styleClass="card-title" />
+
+                        <HBox styleClass="info-context-strip" spacing="16" alignment="CENTER_LEFT">
+                            <Label text="Complainant:" styleClass="field-label" />
+                            <Label fx:id="lblStudentName" styleClass="text-value-bold" text="Loading..." />
+                            <Label text="•" styleClass="text-separator" />
+                            <Label fx:id="lblStudentId" styleClass="text-highlight" text="" />
+                            <Label text="•" styleClass="text-separator" />
+                            <Label fx:id="lblStudentDept" styleClass="text-value" text="" />
+                            <Label text="•" styleClass="text-separator" />
+                            <Label fx:id="lblStudentResidence" styleClass="text-value" text="" />
+                        </HBox>
+
+                        <GridPane hgap="16" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="130" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                            </columnConstraints>
+
+                            <Label styleClass="field-label" text="Direct to Provost *:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                            <ComboBox fx:id="cmbProvost" promptText="-- Select Hall Provost --" maxWidth="Infinity" styleClass="combo-field" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Complaint Title *:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                            <TextField fx:id="txtComplaintTitle" promptText="Brief title (e.g. Broken water tap in washroom 2B, Fan noise)..." styleClass="input-field" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Detailed Issue *:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                            <TextArea fx:id="txtComplaintMessage" promptText="Provide a clear, detailed description of the problem..." prefRowCount="4" wrapText="true" styleClass="text-area" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                        </GridPane>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="12">
+                            <Label fx:id="lblFormFeedback" text="" styleClass="status-error" HBox.hgrow="ALWAYS" wrapText="true" />
+                            <Button text="Cancel" styleClass="btn-ghost" onAction="#onCancelFormClicked" />
+                            <Button fx:id="btnSubmitComplaint" text="Submit Complaint" styleClass="btn-primary" onAction="#onSubmitComplaintClicked" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox fx:id="boxViewModal" styleClass="card" spacing="14" visible="false" managed="false">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="Complaint Full Details" styleClass="card-title" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button text="✕ Close" styleClass="btn-ghost" onAction="#onCloseViewModalClicked" />
+                        </HBox>
+
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="Title:" styleClass="field-label" />
+                            <Label fx:id="lblViewTitle" styleClass="text-value-bold" text="" wrapText="true" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label text="Status:" styleClass="field-label" />
+                            <Label fx:id="lblViewStatus" text="" />
+                        </HBox>
+
+                        <HBox spacing="16" alignment="CENTER_LEFT">
+                            <Label text="Assigned Provost:" styleClass="field-label" />
+                            <Label fx:id="lblViewProvost" styleClass="text-highlight" text="" />
+                            <Label text="•" styleClass="text-separator" />
+                            <Label text="Submitted At:" styleClass="field-label" />
+                            <Label fx:id="lblViewSubmittedAt" styleClass="text-value" text="" />
+                        </HBox>
+
+                        <VBox spacing="4">
+                            <Label text="Complaint Message:" styleClass="field-label" />
+                            <Label fx:id="lblViewMessage" wrapText="true" styleClass="text-value" />
+                        </VBox>
+
+                        <VBox fx:id="boxProvostResponse" spacing="4" visible="false" managed="false" styleClass="form-subcard-highlight">
+                            <Label text="Provost Official Response:" styleClass="section-badge" />
+                            <Label fx:id="lblViewResponse" styleClass="text-value" text="" wrapText="true" />
+                            <Label fx:id="lblViewRespondedAt" styleClass="text-muted" text="" />
+                        </VBox>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="10">
+                            <Button fx:id="btnModalEdit" text="✏ Edit Complaint" styleClass="btn-ghost" onAction="#onModalEditClicked" />
+                            <Button fx:id="btnModalCancel" text="Cancel Complaint" styleClass="btn-danger" onAction="#onModalCancelClicked" />
+                            <Button fx:id="btnModalDelete" text="🗑 Delete" styleClass="btn-danger" onAction="#onModalDeleteClicked" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="card" spacing="12" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="Your Submitted Complaints &amp; Tracking History" styleClass="card-title" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label fx:id="lblComplaintCount" text="0 total complaints" style="-fx-font-size: 12px; -fx-text-fill: #94a3b8;" />
+                        </HBox>
+
+                        <TableView fx:id="tblComplaints" minHeight="260">
+                            <columns>
+                                <TableColumn fx:id="colSerial" text="Serial" minWidth="60" prefWidth="65" style="-fx-alignment: CENTER;" />
+                                <TableColumn fx:id="colDate" text="Date Filed" minWidth="110" prefWidth="125" style="-fx-alignment: CENTER;" />
+                                <TableColumn fx:id="colProvost" text="Assigned Provost" minWidth="160" prefWidth="190" />
+                                <TableColumn fx:id="colTitle" text="Complaint Title" minWidth="180" prefWidth="240" />
+                                <TableColumn fx:id="colStatus" text="Status" minWidth="110" prefWidth="125" style="-fx-alignment: CENTER;" />
+                                <TableColumn fx:id="colActions" text="Actions" minWidth="170" prefWidth="190" style="-fx-alignment: CENTER;" />
+                            </columns>
+                            <placeholder>
+                                <Label text="No complaints filed yet." style="-fx-text-fill: #64748b; -fx-font-size: 13px;" />
+                            </placeholder>
+                        </TableView>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <HBox styleClass="status-strip">
+                <Label text="●" styleClass="status-dot-active" />
+                <Label styleClass="status-strip-text" text="Grievance Redressal Synchronized · Live DB Connected" />
+            </HBox>
+
+            <HBox styleClass="university-footer">
+                <Label styleClass="university-footer-text" text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

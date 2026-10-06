@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hallmanagement.controller.ProvostProfileController"
+            styleClass="dashboard-root"
+            stylesheets="@../css/dashboard.css"
+            minWidth="960" minHeight="640">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="250" spacing="0">
+            <VBox styleClass="sidebar-header" spacing="4">
+                <Label styleClass="sidebar-app-name" text="RUET Hall System" />
+                <Label styleClass="sidebar-portal"   text="PROVOST PORTAL" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-width: 0;" VBox.vgrow="ALWAYS">
+                <VBox styleClass="sidebar-nav" spacing="3">
+                    <Label styleClass="nav-section-label" text="ADMINISTRATION" />
+                    <Button fx:id="btnNavDashboard" styleClass="nav-button" text="🏠  Dashboard" onAction="#onDashboardClicked" />
+                    <Button fx:id="btnNavProfile"   styleClass="nav-button-active" text="👤  Provost Profile" />
+                    <Button fx:id="btnNavHallInfo"  styleClass="nav-button" text="🏢  Hall Information" onAction="#onHallInformationClicked" />
+                    <Button styleClass="nav-button" text="📢  Notice Board" onAction="#onNoticeBoardClicked" />
+
+                    <Region prefHeight="10" />
+
+                    <Label styleClass="nav-section-label" text="STUDENT REQUESTS" />
+                    <Button fx:id="btnNavPaymentRequests" styleClass="nav-button" text="💳  Payment Requests" onAction="#onPaymentRequestsClicked" />
+                    <Button fx:id="btnNavHallChangeRequests" styleClass="nav-button" text="🔄  Hall Transfers" onAction="#onHallChangeRequestsClicked" />
+                    <Button fx:id="btnNavRoomChangeRequests" styleClass="nav-button" text="🛏  Room/Seat Changes" onAction="#onRoomChangeRequestsClicked" />
+                    <Button fx:id="btnNavComplaints" styleClass="nav-button" text="📝  Complaints" onAction="#onComplaintsClicked" />
+                    <Button fx:id="btnNavHallLeaveRequests" styleClass="nav-button" text="🚪  Hall Leave Requests" onAction="#onHallLeaveRequestsClicked" />
+                </VBox>
+            </ScrollPane>
+
+            <VBox styleClass="sidebar-footer" alignment="BOTTOM_CENTER">
+                <Label fx:id="lblSidebarUser" styleClass="sidebar-footer-text" />
+                <Label fx:id="lblSidebarRole" styleClass="sidebar-footer-text" />
+                <Region prefHeight="6" />
+                <Button fx:id="btnLogout"
+                        styleClass="btn-logout"
+                        text="⏻  Sign Out"
+                        maxWidth="Infinity"
+                        onAction="#onLogoutClicked" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+
+            <HBox styleClass="top-header-bar">
+                <Button text="← Back" styleClass="btn-top-back" onAction="#onBackClicked" />
+                <Label styleClass="top-header-title" text="Provost Official Profile &amp; Hall Authority" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="🔄 Refresh" styleClass="btn-ghost" onAction="#onRefreshClicked" />
+            </HBox>
+
+            <ScrollPane fitToWidth="true" fitToHeight="false" styleClass="main-scroll" VBox.vgrow="ALWAYS">
+                <VBox styleClass="main-content-fluid" spacing="18">
+
+                    <HBox styleClass="welcome-hero" alignment="CENTER_LEFT" spacing="18">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="HALL PROVOST PROFILE" styleClass="welcome-badge" />
+                            <Label fx:id="lblHeroName" text="Prof. Dr. Provost Name" styleClass="welcome-name" />
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label fx:id="lblHeroDesignation" text="Professor &amp; Provost" styleClass="welcome-meta" />
+                                <Label text="•" style="-fx-text-fill: #64748b;" />
+                                <Label fx:id="lblHeroId" text="ID: provost001" styleClass="welcome-meta" />
+                                <Label text="•" style="-fx-text-fill: #64748b;" />
+                                <Label fx:id="lblAssignedHallName" text="Assigned Hall" style="-fx-text-fill: #38bdf8; -fx-font-weight: 600;" />
+                            </HBox>
+                        </VBox>
+                        <Button fx:id="btnEditToggle" text="✏ Edit Profile" styleClass="btn-primary" onAction="#onEditToggleClicked" />
+                    </HBox>
+
+                    <VBox styleClass="card" spacing="12">
+                        <Label styleClass="card-title" text="Assigned Hall Capacity &amp; Live Occupancy" />
+
+                        <GridPane hgap="12" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="24" />
+                                <ColumnConstraints percentWidth="19" />
+                                <ColumnConstraints percentWidth="19" />
+                                <ColumnConstraints percentWidth="19" />
+                                <ColumnConstraints percentWidth="19" />
+                            </columnConstraints>
+
+                            <VBox styleClass="stat-subcard" spacing="4" GridPane.columnIndex="0">
+                                <Label text="ASSIGNED HALL" styleClass="section-badge" />
+                                <Label fx:id="lblStatHallName" text="Hall Name" styleClass="text-highlight" wrapText="true" />
+                            </VBox>
+
+                            <VBox styleClass="stat-subcard" spacing="4" GridPane.columnIndex="1">
+                                <Label text="ROOMS" styleClass="section-badge" />
+                                <Label fx:id="lblStatRooms" text="0" style="-fx-font-size: 18px; -fx-font-weight: 700;" styleClass="text-value-bold" />
+                            </VBox>
+
+                            <VBox styleClass="stat-subcard" spacing="4" GridPane.columnIndex="2">
+                                <Label text="TOTAL SEATS" styleClass="section-badge" />
+                                <Label fx:id="lblStatTotalSeats" text="0" style="-fx-font-size: 18px; -fx-font-weight: 700;" styleClass="text-value-bold" />
+                            </VBox>
+
+                            <VBox styleClass="stat-subcard" spacing="4" GridPane.columnIndex="3">
+                                <Label text="OCCUPIED" styleClass="section-badge" />
+                                <Label fx:id="lblStatOccupied" text="0" style="-fx-font-size: 18px; -fx-font-weight: 700;" styleClass="text-highlight-amber" />
+                            </VBox>
+
+                            <VBox styleClass="stat-subcard" spacing="4" GridPane.columnIndex="4">
+                                <Label text="AVAILABLE" styleClass="section-badge" />
+                                <Label fx:id="lblStatAvailable" text="0" style="-fx-font-size: 18px; -fx-font-weight: 700;" styleClass="text-highlight-green" />
+                            </VBox>
+                        </GridPane>
+                    </VBox>
+
+                    <VBox styleClass="card" spacing="14">
+                        <Label styleClass="card-title" text="Official Contact &amp; Designation Information" />
+
+                        <GridPane hgap="16" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="130" prefWidth="130" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                            </columnConstraints>
+
+                            <Label styleClass="field-label" text="Provost Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                            <TextField fx:id="txtName" styleClass="input-field" editable="false" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="User ID:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                            <TextField fx:id="txtUserId" styleClass="input-field" editable="false" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Designation:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                            <TextField fx:id="txtDesignation" styleClass="input-field" editable="false" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Age:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                            <TextField fx:id="txtAge" styleClass="input-field" editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Official Phone:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                            <TextField fx:id="txtPhone" styleClass="input-field" editable="false" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Official Email:" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+                            <TextField fx:id="txtEmail" promptText="e.g. provost@ruet.ac.bd" styleClass="input-field" editable="false" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Office Room:" GridPane.rowIndex="6" GridPane.columnIndex="0" />
+                            <TextField fx:id="txtOfficeRoom" styleClass="input-field" editable="false" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Assigned Hall:" GridPane.rowIndex="7" GridPane.columnIndex="0" />
+                            <ComboBox fx:id="cmbAssignedHall" maxWidth="Infinity" styleClass="combo-field" disable="true" GridPane.rowIndex="7" GridPane.columnIndex="1" />
+                        </GridPane>
+
+                        <HBox fx:id="boxEditActions" alignment="CENTER_RIGHT" spacing="10" visible="false" managed="false">
+                            <Label fx:id="lblFeedback" text="" styleClass="status-error" HBox.hgrow="ALWAYS" wrapText="true" />
+                            <Button text="Cancel" styleClass="btn-ghost" onAction="#onCancelEditClicked" />
+                            <Button text="Save Changes" styleClass="btn-primary" onAction="#onSaveChangesClicked" />
+                        </HBox>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <HBox styleClass="status-strip">
+                <Label text="●" styleClass="status-dot-active" />
+                <Label styleClass="status-strip-text" text="Provost Official Record Synchronized · Live DB Connected" />
+            </HBox>
+
+            <HBox styleClass="university-footer">
+                <Label styleClass="university-footer-text" text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
