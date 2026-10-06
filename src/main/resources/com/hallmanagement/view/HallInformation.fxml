@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hallmanagement.controller.HallInformationController"
+            styleClass="dashboard-root"
+            stylesheets="@../css/dashboard.css"
+            minWidth="1050" minHeight="720">
+
+    <left>
+        <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="250" spacing="0">
+            <VBox styleClass="sidebar-header" spacing="4">
+                <Label styleClass="sidebar-app-name" text="RUET Hall System" />
+                <Label fx:id="lblPortalTitle" styleClass="sidebar-portal" text="STUDENT PORTAL" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-width: 0;" VBox.vgrow="ALWAYS">
+                <VBox styleClass="sidebar-nav" spacing="3">
+                    <Label styleClass="nav-section-label" text="MAIN NAVIGATION" />
+                    <Button fx:id="btnNavDashboard" styleClass="nav-button" text="🏠  Dashboard" onAction="#onDashboardClicked" />
+                    <Button fx:id="btnNavProfile"   styleClass="nav-button" text="👤  My Profile" onAction="#onMyProfileClicked" />
+                    <Button fx:id="btnNavHallInfo"  styleClass="nav-button-active" text="🏢  Hall Information" />
+                    <Button fx:id="btnNavBillingOrRequests" styleClass="nav-button" text="💳  Bill &amp; Due" onAction="#onBillingOrRequestsClicked" />
+                    <Button fx:id="btnNavNoticeBoard" styleClass="nav-button" text="📢  Notice Board" onAction="#onNoticeBoardClicked" />
+
+                    <Region prefHeight="10" />
+
+                    <Label fx:id="lblNavSecondarySection" styleClass="nav-section-label" text="RESIDENCE SERVICES" />
+                    <VBox fx:id="boxSecondaryNavStudent" spacing="2">
+                        <Button fx:id="btnNavStudentHallChange" styleClass="nav-button" text="🔄  Apply for New Hall" onAction="#onHallChangeClicked" />
+                        <Button fx:id="btnNavStudentRoomChange" styleClass="nav-button" text="🛏  Room/Seat Change" onAction="#onRoomChangeClicked" />
+                        <Button fx:id="btnNavStudentComplaints" styleClass="nav-button" text="📝  Complaints" onAction="#onComplaintsClicked" />
+                        <Button fx:id="btnNavStudentHallLeave"  styleClass="nav-button" text="🚪  Hall Leave" onAction="#onHallLeaveClicked" />
+                    </VBox>
+                    <VBox fx:id="boxSecondaryNavProvost" spacing="2" managed="false" visible="false">
+                        <Button fx:id="btnNavHallChangeRequests" styleClass="nav-button" text="🔄  Hall Change Requests" onAction="#onHallChangeRequestsClicked" />
+                        <Button fx:id="btnNavRoomChangeRequests" styleClass="nav-button" text="🛏  Room/Seat Change Requests" onAction="#onRoomChangeRequestsClicked" />
+                        <Button fx:id="btnNavComplaints" styleClass="nav-button" text="📝  Complaints" onAction="#onComplaintsClicked" />
+                        <Button fx:id="btnNavHallLeaveRequests" styleClass="nav-button" text="🚪  Hall Leave Requests" onAction="#onHallLeaveRequestsClicked" />
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+
+            <VBox styleClass="sidebar-footer" alignment="BOTTOM_CENTER">
+                <Label fx:id="lblUserId" styleClass="sidebar-footer-text" />
+                <Label fx:id="lblRole"   styleClass="sidebar-footer-text" />
+                <Region prefHeight="6" />
+                <Button fx:id="btnLogout"
+                        styleClass="btn-logout"
+                        text="⏻  Sign Out"
+                        maxWidth="Infinity"
+                        onAction="#onLogoutClicked" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+
+            <HBox styleClass="top-header-bar">
+                <Button fx:id="btnBack" text="← Back" styleClass="btn-top-back" onAction="#onBackClicked" />
+                <Label fx:id="lblBreadcrumb" styleClass="top-header-title" text="RUET Residential Halls  ›  Digital Infrastructure Profile" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+
+                <Label text="Select Hall:" styleClass="field-label" />
+                <ComboBox fx:id="cmbSelectHall" prefWidth="260" styleClass="combo-field" onAction="#onHallSelected" />
+
+                <Button fx:id="btnRefresh" text="🔄 Refresh" styleClass="btn-ghost" onAction="#onRefreshClicked" />
+            </HBox>
+
+            <ScrollPane fitToWidth="true" fitToHeight="false" styleClass="main-scroll" VBox.vgrow="ALWAYS">
+                <VBox styleClass="main-content-fluid" spacing="18">
+
+                    <VBox styleClass="content-card" spacing="8">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="RUET RESIDENTIAL HALLS (CLICK TO SWITCH HALL PROFILE):" styleClass="section-title" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label text="Your residence is listed 1st, followed by other halls" style="-fx-text-fill: #94a3b8; -fx-font-size: 11px; -fx-font-style: italic;" />
+                        </HBox>
+                        <ScrollPane fitToHeight="true" vbarPolicy="NEVER" hbarPolicy="AS_NEEDED" styleClass="tab-scroll-bar">
+                            <HBox fx:id="boxHallCardsSerial" spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 4 2 8 2;">
+
+                            </HBox>
+                        </ScrollPane>
+                    </VBox>
+
+                    <HBox styleClass="residence-banner" alignment="CENTER_LEFT" spacing="20">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label fx:id="lblHallNameHeader" styleClass="residence-banner-title" text="Shahid Shahidul Islam Hall" />
+                                <Label fx:id="lblHallTypeBadge" style="-fx-background-color: rgba(59,130,246,0.2); -fx-text-fill: #93c5fd; -fx-padding: 3 10; -fx-background-radius: 12; -fx-font-weight: bold; -fx-font-size: 11px;" text="MALE RESIDENCE" />
+                            </HBox>
+                            <Label fx:id="lblHallProvostSummary" styleClass="residence-banner-details" text="Provost: Prof. Dr. M. Rahman | Office: Ground Floor | Established: 1964" />
+                        </VBox>
+                        <VBox alignment="CENTER_RIGHT" spacing="4" minWidth="200">
+                            <Label text="LIVE OCCUPANCY RATE" style="-fx-font-size: 10px; -fx-text-fill: #94a3b8; -fx-font-weight: bold;" />
+                            <ProgressBar fx:id="progressOccupancy" prefWidth="180" prefHeight="10" progress="0.75" style="-fx-accent: #10b981;" />
+                            <Label fx:id="lblOccupancyPercent" style="-fx-font-size: 13px; -fx-text-fill: #34d399; -fx-font-weight: bold;" text="75.0% Occupied" />
+                        </VBox>
+                    </HBox>
+
+                    <VBox styleClass="content-card" spacing="10">
+                        <Label text="LIVE INFRASTRUCTURE &amp; OCCUPANCY METRICS" styleClass="section-title" />
+
+                        <HBox styleClass="metrics-grid" spacing="10" alignment="CENTER">
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="🏢 FLOORS" />
+                                <Label fx:id="lblKpiFloors" styleClass="metric-value" text="0" />
+                            </VBox>
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="🚪 TOTAL ROOMS" />
+                                <Label fx:id="lblKpiRooms" styleClass="metric-value" text="0" />
+                            </VBox>
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="🛏 TOTAL SEATS" />
+                                <Label fx:id="lblKpiSeats" styleClass="metric-value" text="0" />
+                            </VBox>
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="👨‍🎓 OCCUPIED" />
+                                <Label fx:id="lblKpiOccupied" styleClass="metric-value-occupied" text="0" />
+                            </VBox>
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="🟢 VACANT" />
+                                <Label fx:id="lblKpiVacant" styleClass="metric-value-available" text="0" />
+                            </VBox>
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="👥 TOTAL STAFF" />
+                                <Label fx:id="lblKpiStaff" styleClass="metric-value" text="0" />
+                            </VBox>
+                        </HBox>
+
+                        <HBox styleClass="metrics-grid" spacing="10" alignment="CENTER">
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="❄️ TOTAL AC" />
+                                <Label fx:id="lblKpiAc" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #38bdf8;" text="0" />
+                            </VBox>
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="🌀 TOTAL FANS" />
+                                <Label fx:id="lblKpiFans" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4ade80;" text="0" />
+                            </VBox>
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="💡 TOTAL LIGHTS" />
+                                <Label fx:id="lblKpiLights" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #fbbf24;" text="0" />
+                            </VBox>
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="🚿 WASHROOMS" />
+                                <Label fx:id="lblKpiWashrooms" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #c084fc;" text="0" />
+                            </VBox>
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="📹 CCTV CAMERAS" />
+                                <Label fx:id="lblKpiCctv" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #fb923c;" text="0" />
+                            </VBox>
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="🔥 FIRE SAFETY" />
+                                <Label fx:id="lblKpiFireSafety" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #f87171;" text="0" />
+                            </VBox>
+                            <VBox styleClass="metric-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="3">
+                                <Label styleClass="metric-label" text="🔧 PENDING REPAIRS" />
+                                <Label fx:id="lblKpiMaintenance" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #facc15;" text="0" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <Label fx:id="lblFeedback" styleClass="feedback-label" text="" managed="false" visible="false" />
+
+                    <VBox spacing="10">
+                        <HBox alignment="CENTER_LEFT" spacing="8" styleClass="tab-nav-container">
+                            <Button fx:id="btnTabScrollLeft" text="◀" styleClass="btn-tab-scroll" onAction="#onTabScrollLeft" />
+
+                            <ScrollPane fx:id="scrollTabBar" fitToHeight="true" vbarPolicy="NEVER" hbarPolicy="AS_NEEDED" styleClass="tab-scroll-bar" HBox.hgrow="ALWAYS">
+                                <HBox fx:id="boxTabButtons" spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4 4 8 4;">
+                                    <Button fx:id="tabBtnOverview" text="🏢  Overview" styleClass="tab-pill-active" onAction="#onTabOverviewClicked" />
+                                    <Button fx:id="tabBtnBuilding" text="🏛️  Building &amp; Facilities" styleClass="tab-pill" onAction="#onTabBuildingClicked" />
+                                    <Button fx:id="tabBtnFloors" text="🪜  Floor Management" styleClass="tab-pill" onAction="#onTabFloorsClicked" />
+                                    <Button fx:id="tabBtnRooms" text="🚪  Rooms &amp; Occupancy" styleClass="tab-pill" onAction="#onTabRoomsClicked" />
+                                    <Button fx:id="tabBtnElectrical" text="⚡  Electrical System" styleClass="tab-pill" onAction="#onTabElectricalClicked" />
+                                    <Button fx:id="tabBtnFurniture" text="🪑  Furniture" styleClass="tab-pill" onAction="#onTabFurnitureClicked" />
+                                    <Button fx:id="tabBtnAc" text="❄️  AC &amp; Cooling" styleClass="tab-pill" onAction="#onTabAcClicked" />
+                                    <Button fx:id="tabBtnLighting" text="💡  Lighting" styleClass="tab-pill" onAction="#onTabLightingClicked" />
+                                    <Button fx:id="tabBtnWashrooms" text="🚿  Washrooms" styleClass="tab-pill" onAction="#onTabWashroomsClicked" />
+                                    <Button fx:id="tabBtnWater" text="💧  Water System" styleClass="tab-pill" onAction="#onTabWaterClicked" />
+                                    <Button fx:id="tabBtnDining" text="🍽️  Kitchen &amp; Dining" styleClass="tab-pill" onAction="#onTabDiningClicked" />
+                                    <Button fx:id="tabBtnNetwork" text="🌐  Network" styleClass="tab-pill" onAction="#onTabNetworkClicked" />
+                                    <Button fx:id="tabBtnCctv" text="📹  CCTV &amp; Security" styleClass="tab-pill" onAction="#onTabCctvClicked" />
+                                    <Button fx:id="tabBtnFire" text="🧯  Fire Safety" styleClass="tab-pill" onAction="#onTabFireClicked" />
+                                    <Button fx:id="tabBtnMaintenance" text="🔧  Maintenance" styleClass="tab-pill" onAction="#onTabMaintenanceClicked" />
+                                    <Button fx:id="tabBtnCleaning" text="🧹  Cleaning" styleClass="tab-pill" onAction="#onTabCleaningClicked" />
+                                    <Button fx:id="tabBtnContacts" text="📞  Contact Directory" styleClass="tab-pill" onAction="#onTabContactsClicked" />
+                                    <Button fx:id="tabBtnUtilities" text="💰  Utilities &amp; Expenses" styleClass="tab-pill" onAction="#onTabUtilitiesClicked" />
+                                    <Button fx:id="tabBtnAssets" text="📦  Asset Inventory" styleClass="tab-pill" onAction="#onTabAssetsClicked" />
+                                </HBox>
+                            </ScrollPane>
+
+                            <Button fx:id="btnTabScrollRight" text="▶" styleClass="btn-tab-scroll" onAction="#onTabScrollRight" />
+                        </HBox>
+
+                        <StackPane fx:id="tabContentStack" VBox.vgrow="ALWAYS">
+
+                            <VBox fx:id="paneOverview" spacing="16" style="-fx-padding: 8 0 0 0;">
+                                <HBox spacing="16">
+
+                                    <VBox styleClass="content-card" HBox.hgrow="ALWAYS" spacing="12">
+                                        <Label text="INSTITUTIONAL PROFILE" styleClass="section-title" />
+                                        <GridPane hgap="16" vgap="10">
+                                            <Label text="Hall Name:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                            <Label fx:id="lblOverviewName" style="-fx-text-fill: #ffffff; -fx-font-weight: 600;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                            <Label text="Hall Code / ID:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                            <Label fx:id="lblOverviewCode" style="-fx-text-fill: #38bdf8; -fx-font-weight: 700;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                            <Label text="Established Year:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                            <Label fx:id="lblOverviewEst" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                            <Label text="Campus Address:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                            <Label fx:id="lblOverviewAddress" style="-fx-text-fill: #ffffff;" text="—" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                            <Label text="Residential Students:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                            <Label fx:id="lblOverviewResStudents" style="-fx-text-fill: #4ade80; -fx-font-weight: bold;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                                            <Label text="Non-Residential Students:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                            <Label fx:id="lblOverviewNonResStudents" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                        </GridPane>
+                                    </VBox>
+
+                                    <VBox styleClass="content-card" HBox.hgrow="ALWAYS" spacing="12">
+                                        <Label text="ADMINISTRATION &amp; CONTACTS" styleClass="section-title" />
+                                        <GridPane hgap="16" vgap="10">
+                                            <Label text="Provost:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                            <Label fx:id="lblOverviewProvost" style="-fx-text-fill: #38bdf8; -fx-font-weight: 600;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                            <Label text="Assistant Provosts:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                            <Label fx:id="lblOverviewAsstProvost" style="-fx-text-fill: #ffffff;" text="—" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                            <Label text="Hall Office Contact:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                            <Label fx:id="lblOverviewOfficePhone" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                            <Label text="Emergency Hotline:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                            <Label fx:id="lblOverviewEmergencyPhone" style="-fx-text-fill: #f87171; -fx-font-weight: bold;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                            <Label text="Hall Official Email:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                            <Label fx:id="lblOverviewEmail" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                                            <Label text="Operational Staff:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                            <Label fx:id="lblOverviewStaffCount" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                        </GridPane>
+                                    </VBox>
+                                </HBox>
+
+                                <VBox styleClass="content-card" spacing="8">
+                                    <Label text="ABOUT THIS RESIDENTIAL HALL" styleClass="section-title" />
+                                    <Label fx:id="lblOverviewDesc" style="-fx-text-fill: #cbd5e1; -fx-font-size: 13px; -fx-line-spacing: 4;" text="Loading description..." wrapText="true" />
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneBuilding" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="14">
+                                    <Label text="BUILDING SPECIFICATIONS &amp; FACILITY DISTRIBUTION" styleClass="section-title" />
+                                    <FlowPane fx:id="flowBuildingSpecs" hgap="16" vgap="14">
+
+                                    </FlowPane>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneFloors" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <Label text="FLOOR-BY-FLOOR METRICS &amp; CAPACITIES" styleClass="section-title" />
+                                    <TableView fx:id="tableFloors" styleClass="history-table" prefHeight="380">
+                                        <columns>
+                                            <TableColumn fx:id="colFloorNum" text="Floor" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorRooms" text="Rooms" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorSeats" text="Total Seats" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorOccupied" text="Occupied" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorVacant" text="Vacant" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorOccRate" text="Occupancy" minWidth="95" prefWidth="105" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorAc" text="AC" minWidth="65" prefWidth="75" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorFans" text="Fans" minWidth="75" prefWidth="85" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorLights" text="Lights" minWidth="75" prefWidth="85" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorWashrooms" text="Washrooms" minWidth="95" prefWidth="105" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorTaps" text="Taps" minWidth="75" prefWidth="85" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorExits" text="Exits" minWidth="65" prefWidth="75" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFloorAction" text="Action" minWidth="120" prefWidth="135" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneRooms" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <HBox alignment="CENTER_LEFT" spacing="14">
+                                        <Label text="ROOM DIRECTORY &amp; LIVE OCCUPANCY" styleClass="section-title" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <TextField fx:id="txtSearchRoom" promptText="🔍  Search room number or type…" styleClass="search-input" prefWidth="250" onKeyReleased="#onRoomSearchChanged" />
+                                        <Label text="Floor:" styleClass="field-label" />
+                                        <ComboBox fx:id="cmbFloorFilter" prefWidth="140" styleClass="combo-filter" onAction="#onFloorFilterChanged" />
+                                    </HBox>
+
+                                    <TableView fx:id="tableRooms" styleClass="history-table" prefHeight="400">
+                                        <columns>
+                                            <TableColumn fx:id="colRoomNum" text="Room #" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colRoomFloor" text="Floor" minWidth="70" prefWidth="80" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colRoomType" text="Room Type" minWidth="120" prefWidth="140" />
+                                            <TableColumn fx:id="colRoomCapacity" text="Capacity" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colRoomOccupiedSeats" text="Occupied" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colRoomVacantSeats" text="Vacant" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colRoomStatus" text="Status" minWidth="110" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colRoomAcCount" text="AC" minWidth="60" prefWidth="70" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colRoomFansCount" text="Fans" minWidth="70" prefWidth="80" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colRoomLightsCount" text="Lights" minWidth="70" prefWidth="80" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colRoomCondition" text="Condition" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colRoomAction" text="Action" minWidth="130" prefWidth="150" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneElectrical" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <HBox spacing="16">
+                                    <VBox styleClass="content-card" HBox.hgrow="ALWAYS" spacing="12">
+                                        <Label text="AUTOMATIC ELECTRICAL ROLLUP" styleClass="section-title" />
+                                        <GridPane hgap="16" vgap="12">
+                                            <Label text="Total Hall AC:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                            <Label fx:id="lblElecAcRollup" style="-fx-text-fill: #38bdf8; -fx-font-size: 15px; -fx-font-weight: bold;" text="0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                            <Label text="Ceiling &amp; Exhaust Fans:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                            <Label fx:id="lblElecFansRollup" style="-fx-text-fill: #4ade80; -fx-font-size: 15px; -fx-font-weight: bold;" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                            <Label text="LED &amp; Tube Lights:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                            <Label fx:id="lblElecLightsRollup" style="-fx-text-fill: #fbbf24; -fx-font-size: 15px; -fx-font-weight: bold;" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                            <Label text="Emergency Lighting:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                            <Label fx:id="lblElecEmergLights" style="-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                        </GridPane>
+                                    </VBox>
+
+                                    <VBox styleClass="content-card" HBox.hgrow="ALWAYS" spacing="12">
+                                        <Label text="POWER SUBSTATION &amp; BACKUP" styleClass="section-title" />
+                                        <GridPane hgap="16" vgap="12">
+                                            <Label text="Main Connection:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                            <Label text="11 kV Dedicated Substation (NESCO Grid)" style="-fx-text-fill: #ffffff;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                            <Label text="Generator Backup:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                            <Label text="50 kVA Soundproof Auto-Start Diesel Generator" style="-fx-text-fill: #ffffff;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                            <Label text="Central Online UPS:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                            <Label text="10 kVA Pure Sine Wave (Servers &amp; Wi-Fi)" style="-fx-text-fill: #ffffff;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                            <Label text="Distribution Boards:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                            <Label text="4x Floor Sub-Distribution Boards with RCCB/MCB" style="-fx-text-fill: #ffffff;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                        </GridPane>
+                                    </VBox>
+                                </HBox>
+
+                                <VBox styleClass="content-card" spacing="10">
+                                    <Label text="ROOM-BY-ROOM ELECTRICAL MATRIX" styleClass="section-title" />
+                                    <TableView fx:id="tableRoomElec" styleClass="history-table" prefHeight="300">
+                                        <columns>
+                                            <TableColumn fx:id="colElecRoomNum" text="Room #" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colElecAc" text="AC Units" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colElecCeilingFans" text="Ceiling Fans" minWidth="100" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colElecLedLights" text="LED Lights" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colElecTubeLights" text="Tube Lights" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colElecSockets" text="Power Sockets" minWidth="100" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colElecSwitches" text="Switches" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneFurniture" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <Label text="ROOM FURNITURE DISTRIBUTION &amp; CONDITION" styleClass="section-title" />
+                                    <TableView fx:id="tableRoomFurn" styleClass="history-table" prefHeight="380">
+                                        <columns>
+                                            <TableColumn fx:id="colFurnRoomNum" text="Room #" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFurnBeds" text="Beds" minWidth="70" prefWidth="80" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFurnTables" text="Tables" minWidth="70" prefWidth="80" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFurnChairs" text="Chairs" minWidth="70" prefWidth="80" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFurnWardrobes" text="Wardrobes" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFurnBookshelves" text="Bookshelves" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFurnGood" text="Good Condition" minWidth="110" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFurnDamaged" text="Damaged" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFurnUnderRepair" text="Under Repair" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneAc" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <Label text="AIR CONDITIONER &amp; COOLING INVENTORY" styleClass="section-title" />
+                                    <TableView fx:id="tableAcInventory" styleClass="history-table" prefHeight="380">
+                                        <columns>
+                                            <TableColumn fx:id="colAcCode" text="Item Code" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colAcType" text="Type" minWidth="120" prefWidth="140" />
+                                            <TableColumn fx:id="colAcLocation" text="Location" minWidth="150" prefWidth="180" />
+                                            <TableColumn fx:id="colAcBrand" text="Brand &amp; Model" minWidth="140" prefWidth="160" />
+                                            <TableColumn fx:id="colAcCapacity" text="Capacity" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colAcCondition" text="Condition" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colAcNextService" text="Next Service" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneLighting" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <Label text="LIGHTING FIXTURES &amp; ILLUMINATION CATALOG" styleClass="section-title" />
+                                    <TableView fx:id="tableLightingInventory" styleClass="history-table" prefHeight="380">
+                                        <columns>
+                                            <TableColumn fx:id="colLightCode" text="Code" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colLightType" text="Fixture Type" minWidth="120" prefWidth="140" />
+                                            <TableColumn fx:id="colLightLocation" text="Location" minWidth="150" prefWidth="180" />
+                                            <TableColumn fx:id="colLightRating" text="Wattage / Spec" minWidth="110" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colLightCondition" text="Status" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colLightRemarks" text="Remarks" minWidth="170" prefWidth="200" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneWashrooms" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <Label text="FLOOR-WISE WASHROOM &amp; SANITATION FACILITIES" styleClass="section-title" />
+                                    <FlowPane fx:id="flowWashrooms" hgap="16" vgap="14">
+
+                                    </FlowPane>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneWater" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="14">
+                                    <Label text="WATER STORAGE, PURIFICATION &amp; SUPPLY NETWORK" styleClass="section-title" />
+                                    <GridPane hgap="20" vgap="12">
+                                        <Label text="Primary Water Source:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                        <Label fx:id="lblWaterSource" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                        <Label text="Deep Tube Well:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                        <Label fx:id="lblWaterDeepWell" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                        <Label text="Submersible Pumps:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                        <Label fx:id="lblWaterPumps" style="-fx-text-fill: #38bdf8; -fx-font-weight: bold;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                        <Label text="Overhead Tanks &amp; Capacity:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                        <Label fx:id="lblWaterTanks" style="-fx-text-fill: #4ade80; -fx-font-weight: bold;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                        <Label text="Drinking Water Stations:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                        <Label fx:id="lblWaterDrinkingPoints" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                                        <Label text="Purifiers &amp; Filters:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                        <Label fx:id="lblWaterFilters" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                                        <Label text="Last Tank Sanitization:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                                        <Label fx:id="lblWaterLastClean" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                                        <Label text="Next Scheduled Cleaning:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                                        <Label fx:id="lblWaterNextClean" style="-fx-text-fill: #fbbf24; -fx-font-weight: bold;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                    </GridPane>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneDining" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <HBox spacing="16">
+                                    <VBox styleClass="content-card" HBox.hgrow="ALWAYS" spacing="12">
+                                        <Label text="CENTRAL DINING HALL" styleClass="section-title" />
+                                        <GridPane hgap="16" vgap="10">
+                                            <Label text="Dining Capacity:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                            <Label fx:id="lblDiningCapacity" style="-fx-text-fill: #4ade80; -fx-font-size: 15px; -fx-font-weight: bold;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                            <Label text="Stainless Steel Tables:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                            <Label fx:id="lblDiningTables" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                            <Label text="Dining Chairs:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                            <Label fx:id="lblDiningChairs" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                            <Label text="Cooling (AC &amp; Fans):" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                            <Label fx:id="lblDiningCooling" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                            <Label text="Handwash Basins:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                            <Label fx:id="lblDiningBasins" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                        </GridPane>
+                                    </VBox>
+
+                                    <VBox styleClass="content-card" HBox.hgrow="ALWAYS" spacing="12">
+                                        <Label text="CENTRAL CULINARY KITCHEN" styleClass="section-title" />
+                                        <GridPane hgap="16" vgap="10">
+                                            <Label text="Kitchen Floor Area:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                            <Label fx:id="lblKitchenArea" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                            <Label text="Industrial Stoves &amp; Burners:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                            <Label fx:id="lblKitchenBurners" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                            <Label text="Refrigerators &amp; Freezers:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                            <Label fx:id="lblKitchenFridges" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                            <Label text="Exhaust &amp; Ventilation Fans:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                            <Label fx:id="lblKitchenExhaust" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                            <Label text="Permanent Kitchen Staff:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                            <Label fx:id="lblKitchenStaff" style="-fx-text-fill: #ffffff;" text="—" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                        </GridPane>
+                                    </VBox>
+                                </HBox>
+                            </VBox>
+
+                            <VBox fx:id="paneNetwork" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <Label text="CAMPUS NETWORK &amp; HIGH-SPEED WI-FI INFRASTRUCTURE" styleClass="section-title" />
+                                    <TableView fx:id="tableNetwork" styleClass="history-table" prefHeight="350">
+                                        <columns>
+                                            <TableColumn fx:id="colNetCode" text="Item Code" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colNetType" text="Device Type" minWidth="130" prefWidth="150" />
+                                            <TableColumn fx:id="colNetLocation" text="Location" minWidth="150" prefWidth="180" />
+                                            <TableColumn fx:id="colNetBrand" text="Model / Specs" minWidth="140" prefWidth="160" />
+                                            <TableColumn fx:id="colNetCapacity" text="Speed / Capacity" minWidth="110" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colNetStatus" text="Status" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneCctv" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <Label text="SURVEILLANCE CAMERAS &amp; SECURITY POSTS" styleClass="section-title" />
+                                    <TableView fx:id="tableCctv" styleClass="history-table" prefHeight="350">
+                                        <columns>
+                                            <TableColumn fx:id="colCctvCode" text="Camera ID" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colCctvType" text="Camera Type" minWidth="120" prefWidth="140" />
+                                            <TableColumn fx:id="colCctvLocation" text="Coverage Location" minWidth="170" prefWidth="200" />
+                                            <TableColumn fx:id="colCctvModel" text="Brand &amp; Specs" minWidth="130" prefWidth="150" />
+                                            <TableColumn fx:id="colCctvStatus" text="Live Status" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colCctvRemarks" text="Remarks" minWidth="160" prefWidth="180" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneFire" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <Label text="FIRE EXTINGUISHERS &amp; EMERGENCY EQUIPMENT" styleClass="section-title" />
+                                    <TableView fx:id="tableFireSafety" styleClass="history-table" prefHeight="350">
+                                        <columns>
+                                            <TableColumn fx:id="colFireCode" text="Item ID" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFireType" text="Equipment Type" minWidth="130" prefWidth="150" />
+                                            <TableColumn fx:id="colFireLocation" text="Location" minWidth="170" prefWidth="200" />
+                                            <TableColumn fx:id="colFireCapacity" text="Capacity / Spec" minWidth="110" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFireStatus" text="Certification Status" minWidth="120" prefWidth="140" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colFireNextService" text="Next Inspection" minWidth="110" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneMaintenance" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <HBox alignment="CENTER_LEFT" spacing="14">
+                                        <Label text="MAINTENANCE &amp; REPAIR WORK ORDERS" styleClass="section-title" HBox.hgrow="ALWAYS" />
+                                        <ComboBox fx:id="cmbMaintenanceFilter" prefWidth="150" styleClass="combo-filter" onAction="#onMaintenanceFilterChanged" />
+                                        <Button fx:id="btnNewMaintenance" text="➕ Report Maintenance" styleClass="btn-primary" onAction="#onNewMaintenanceClicked" />
+                                    </HBox>
+
+                                    <TableView fx:id="tableMaintenance" styleClass="history-table" prefHeight="380">
+                                        <columns>
+                                            <TableColumn fx:id="colMntCode" text="Work Order" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colMntLocation" text="Location" minWidth="110" prefWidth="130" />
+                                            <TableColumn fx:id="colMntCategory" text="Category" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colMntProblem" text="Problem Description" minWidth="190" prefWidth="220" />
+                                            <TableColumn fx:id="colMntReportedBy" text="Reported By" minWidth="100" prefWidth="120" />
+                                            <TableColumn fx:id="colMntPriority" text="Priority" minWidth="80" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colMntStatus" text="Status" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colMntCost" text="Cost (Tk)" minWidth="80" prefWidth="90" style="-fx-alignment: CENTER-RIGHT;" />
+                                            <TableColumn fx:id="colMntAction" text="Action" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneCleaning" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <Label text="SANITATION &amp; CLEANING SCHEDULES" styleClass="section-title" />
+                                    <TableView fx:id="tableCleaning" styleClass="history-table" prefHeight="350">
+                                        <columns>
+                                            <TableColumn fx:id="colCleanArea" text="Sanitation Area" minWidth="150" prefWidth="180" />
+                                            <TableColumn fx:id="colCleanFreq" text="Frequency" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colCleanStaff" text="Assigned Staff Crew" minWidth="150" prefWidth="180" />
+                                            <TableColumn fx:id="colCleanStatus" text="Status" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colCleanLastDate" text="Last Cleaned" minWidth="110" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colCleanNextDate" text="Next Scheduled" minWidth="110" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneContacts" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <Label text="HALL OFFICIALS, STAFF &amp; EMERGENCY DIRECTORY" styleClass="section-title" />
+                                    <TableView fx:id="tableContacts" styleClass="history-table" prefHeight="380">
+                                        <columns>
+                                            <TableColumn fx:id="colContactCategory" text="Category" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colContactDesignation" text="Designation" minWidth="150" prefWidth="180" />
+                                            <TableColumn fx:id="colContactName" text="Name" minWidth="150" prefWidth="180" />
+                                            <TableColumn fx:id="colContactPhone" text="Phone Number" minWidth="130" prefWidth="150" />
+                                            <TableColumn fx:id="colContactEmail" text="Email" minWidth="150" prefWidth="180" />
+                                            <TableColumn fx:id="colContactAvailability" text="Availability" minWidth="110" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneUtilities" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <Label text="MONTHLY OPERATING &amp; UTILITY EXPENSES" styleClass="section-title" />
+                                    <TableView fx:id="tableUtilities" styleClass="history-table" prefHeight="350">
+                                        <columns>
+                                            <TableColumn fx:id="colUtilMonth" text="Billing Month" minWidth="110" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colUtilElec" text="Electricity (Tk)" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;" />
+                                            <TableColumn fx:id="colUtilWater" text="Water (Tk)" minWidth="85" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;" />
+                                            <TableColumn fx:id="colUtilInternet" text="Internet (Tk)" minWidth="85" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;" />
+                                            <TableColumn fx:id="colUtilGas" text="Gas (Tk)" minWidth="75" prefWidth="90" style="-fx-alignment: CENTER-RIGHT;" />
+                                            <TableColumn fx:id="colUtilMnt" text="Repairs (Tk)" minWidth="85" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;" />
+                                            <TableColumn fx:id="colUtilTotal" text="Total (Tk)" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER-RIGHT; -fx-font-weight: bold;" />
+                                            <TableColumn fx:id="colUtilStatus" text="Payment Status" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                            <VBox fx:id="paneAssets" spacing="16" style="-fx-padding: 8 0 0 0;" visible="false" managed="false">
+                                <VBox styleClass="content-card" spacing="12">
+                                    <HBox alignment="CENTER_LEFT" spacing="14">
+                                        <Label text="HALL ASSET INVENTORY &amp; AUDIT TRAIL" styleClass="section-title" HBox.hgrow="ALWAYS" />
+                                        <TextField fx:id="txtSearchAsset" promptText="🔍  Search asset by code or name…" styleClass="search-input" prefWidth="240" onKeyReleased="#onAssetSearchChanged" />
+                                        <ComboBox fx:id="cmbAssetCategory" prefWidth="150" styleClass="combo-filter" onAction="#onAssetCategoryChanged" />
+                                        <Button fx:id="btnAddAsset" text="➕ Add Asset" styleClass="btn-primary" onAction="#onAddAssetClicked" />
+                                    </HBox>
+
+                                    <TableView fx:id="tableAssets" styleClass="history-table" prefHeight="380">
+                                        <columns>
+                                            <TableColumn fx:id="colAssetCode" text="Asset Code" minWidth="100" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colAssetName" text="Asset Name" minWidth="170" prefWidth="200" />
+                                            <TableColumn fx:id="colAssetCategory" text="Category" minWidth="110" prefWidth="130" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colAssetQty" text="Qty" minWidth="60" prefWidth="70" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colAssetLocation" text="Location" minWidth="130" prefWidth="150" />
+                                            <TableColumn fx:id="colAssetPrice" text="Value (Tk)" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER-RIGHT;" />
+                                            <TableColumn fx:id="colAssetCondition" text="Condition" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colAssetWarranty" text="Warranty" minWidth="130" prefWidth="150" />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </VBox>
+
+                        </StackPane>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <HBox styleClass="status-strip">
+                <Label text="●" styleClass="status-dot-active" />
+                <Label styleClass="status-strip-text" text="Hall Infrastructure Records Synchronized · Live DB Connected" />
+            </HBox>
+
+            <HBox styleClass="university-footer">
+                <Label styleClass="university-footer-text" text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

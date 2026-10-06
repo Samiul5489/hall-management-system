@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hallmanagement.controller.NoticeBoardController"
+            styleClass="dashboard-root"
+            stylesheets="@../css/dashboard.css"
+            minWidth="960" minHeight="640">
+
+    <left>
+        <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="250" spacing="0">
+            <VBox styleClass="sidebar-header" spacing="4">
+                <Label styleClass="sidebar-app-name" text="RUET Hall System" />
+                <Label fx:id="lblPortalTitle" styleClass="sidebar-portal" text="NOTICE BOARD" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-width: 0;" VBox.vgrow="ALWAYS">
+                <VBox styleClass="sidebar-nav" spacing="3">
+                    <Label styleClass="nav-section-label" text="MAIN NAVIGATION" />
+                    <Button fx:id="btnNavDashboard" styleClass="nav-button" text="🏠  Dashboard" onAction="#onDashboardClicked" />
+                    <Button fx:id="btnNavProfile"   styleClass="nav-button" text="👤  My Profile" onAction="#onMyProfileClicked" />
+                    <Button fx:id="btnNavHallInfo"  styleClass="nav-button" text="🏢  Hall Information" onAction="#onHallInformationClicked" />
+                    <Button fx:id="btnNavBillingOrRequests" styleClass="nav-button" text="💳  Bill &amp; Due" onAction="#onBillingOrRequestsClicked" />
+                    <Button fx:id="btnNavNoticeBoard" styleClass="nav-button-active" text="📢  Notice Board" />
+
+                    <Region prefHeight="10" />
+
+                    <Label fx:id="lblNavSecondarySection" styleClass="nav-section-label" text="RESIDENCE SERVICES" />
+                    <VBox fx:id="boxSecondaryNavStudent" spacing="3">
+                        <Button fx:id="btnNavStudentHallChange" styleClass="nav-button" text="🔄  Apply for New Hall" onAction="#onHallChangeClicked" />
+                        <Button fx:id="btnNavStudentRoomChange" styleClass="nav-button" text="🛏  Room/Seat Change" onAction="#onRoomChangeClicked" />
+                        <Button fx:id="btnNavStudentComplaints" styleClass="nav-button" text="📝  Complaints" onAction="#onComplaintsClicked" />
+                        <Button fx:id="btnNavStudentHallLeave"  styleClass="nav-button" text="🚪  Hall Leave" onAction="#onHallLeaveClicked" />
+                    </VBox>
+                    <VBox fx:id="boxSecondaryNavProvost" spacing="3" managed="false" visible="false">
+                        <Button fx:id="btnNavHallChangeRequests" styleClass="nav-button" text="🔄  Hall Transfers" onAction="#onHallChangeRequestsClicked" />
+                        <Button fx:id="btnNavRoomChangeRequests" styleClass="nav-button" text="🛏  Room/Seat Changes" onAction="#onRoomChangeRequestsClicked" />
+                        <Button fx:id="btnNavComplaints" styleClass="nav-button" text="📝  Complaints" onAction="#onComplaintsClicked" />
+                        <Button fx:id="btnNavHallLeaveRequests" styleClass="nav-button" text="🚪  Hall Leave Requests" onAction="#onHallLeaveRequestsClicked" />
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+
+            <VBox styleClass="sidebar-footer" alignment="BOTTOM_CENTER">
+                <Label fx:id="lblSidebarUser" styleClass="sidebar-footer-text" />
+                <Label fx:id="lblSidebarRole" styleClass="sidebar-footer-text" />
+                <Region prefHeight="6" />
+                <Button fx:id="btnLogout"
+                        styleClass="btn-logout"
+                        text="⏻  Sign Out"
+                        maxWidth="Infinity"
+                        onAction="#onLogoutClicked" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+
+            <HBox styleClass="top-header-bar">
+                <Button text="← Back" styleClass="btn-top-back" onAction="#onBackClicked" />
+                <Label fx:id="lblBreadcrumb" styleClass="top-header-title" text="Official Notice Board &amp; Circulars" />
+                <Region HBox.hgrow="ALWAYS" />
+
+                <HBox spacing="8" alignment="CENTER_RIGHT">
+                    <Button fx:id="btnNewNotice" text="+ Post Notice" styleClass="btn-primary" onAction="#onNewNoticeClicked" visible="false" managed="false" />
+                    <Button text="🔄 Refresh" styleClass="btn-ghost" onAction="#onRefreshClicked" />
+                </HBox>
+            </HBox>
+
+            <ScrollPane fitToWidth="true" fitToHeight="false" styleClass="main-scroll" VBox.vgrow="ALWAYS">
+                <VBox styleClass="main-content-fluid" spacing="18">
+
+                    <HBox styleClass="welcome-hero" alignment="CENTER_LEFT" spacing="18">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="ADMINISTRATIVE CIRCULARS" styleClass="welcome-badge" />
+                            <Label text="Hall Circulars &amp; Important Announcements" styleClass="welcome-name" />
+                            <Label text="Stay informed regarding meal schedules, room allocations, dues deadlines, and maintenance circulars." styleClass="welcome-meta" wrapText="true" />
+                        </VBox>
+                        <VBox alignment="CENTER_RIGHT" spacing="2">
+                            <Label text="Total Notices" style="-fx-font-size: 11px; -fx-text-fill: #94a3b8;" />
+                            <Label fx:id="lblTotalNotices" text="0" style="-fx-font-size: 24px; -fx-font-weight: 700; -fx-text-fill: #38bdf8;" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <TextField fx:id="txtSearchNotice" promptText="🔍  Search circulars and notices by keyword or title..."
+                                   styleClass="input-field" HBox.hgrow="ALWAYS" onKeyReleased="#onSearchNoticeChanged" />
+                    </HBox>
+
+                    <VBox styleClass="card" spacing="12" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tableNotices" VBox.vgrow="ALWAYS" minHeight="380">
+                            <columns>
+                                <TableColumn fx:id="colSerial" text="Serial" minWidth="65" prefWidth="75" style="-fx-alignment: CENTER;" />
+                                <TableColumn fx:id="colDate" text="Date Posted" minWidth="120" prefWidth="135" style="-fx-alignment: CENTER;" />
+                                <TableColumn fx:id="colTitle" text="Notice Title" minWidth="240" prefWidth="300" />
+                                <TableColumn fx:id="colPreview" text="Content Preview" minWidth="380" prefWidth="480" />
+                                <TableColumn fx:id="colAction" text="Actions" minWidth="180" prefWidth="200" style="-fx-alignment: CENTER;" />
+                            </columns>
+                            <placeholder>
+                                <Label text="No notices available at this time." style="-fx-text-fill: #64748b; -fx-font-size: 13px;" />
+                            </placeholder>
+                        </TableView>
+                        <Label text="💡 Double-click any notice row to view complete full-text details." style="-fx-font-size: 11.5px; -fx-text-fill: #64748b;" />
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <HBox styleClass="status-strip">
+                <Label text="●" styleClass="status-dot-active" />
+                <Label styleClass="status-strip-text" text="Notice Board Feed Synchronized · Live DB Connected" />
+            </HBox>
+
+            <HBox styleClass="university-footer">
+                <Label styleClass="university-footer-text" text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

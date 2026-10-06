@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hallmanagement.controller.StudentBillingController"
+            styleClass="dashboard-root"
+            stylesheets="@../css/dashboard.css"
+            minWidth="960" minHeight="640">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="250" spacing="0">
+            <VBox styleClass="sidebar-header" spacing="4">
+                <Label styleClass="sidebar-app-name" text="RUET Hall System" />
+                <Label styleClass="sidebar-portal"   text="STUDENT PORTAL" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-width: 0;" VBox.vgrow="ALWAYS">
+                <VBox styleClass="sidebar-nav" spacing="3">
+                    <Label styleClass="nav-section-label" text="MAIN NAVIGATION" />
+                    <Button styleClass="nav-button" text="🏠  Dashboard" onAction="#onDashboardClicked" />
+                    <Button styleClass="nav-button" text="👤  My Profile" onAction="#onProfileClicked" />
+                    <Button styleClass="nav-button" text="🏢  Hall Information" onAction="#onHallInformationClicked" />
+                    <Button fx:id="btnNavBilling" styleClass="nav-button-active" text="💳  Bill &amp; Due" />
+                    <Button fx:id="btnNavNoticeBoard" styleClass="nav-button" text="📢  Notice Board" onAction="#onNoticeBoardClicked" />
+
+                    <Region prefHeight="10" />
+
+                    <Label styleClass="nav-section-label" text="RESIDENCE SERVICES" />
+                    <Button fx:id="btnNavHallChange" styleClass="nav-button" text="🔄  Apply for New Hall" onAction="#onHallChangeClicked" />
+                    <Button fx:id="btnNavRoomChange" styleClass="nav-button" text="🛏  Room/Seat Change" onAction="#onRoomChangeClicked" />
+                    <Button fx:id="btnNavComplaints" styleClass="nav-button" text="📝  Complaints" onAction="#onComplaintsClicked" />
+                    <Button fx:id="btnNavHallLeave"  styleClass="nav-button" text="🚪  Hall Leave" onAction="#onHallLeaveClicked" />
+                </VBox>
+            </ScrollPane>
+
+            <VBox styleClass="sidebar-footer" alignment="BOTTOM_CENTER">
+                <Label fx:id="lblSidebarUser" styleClass="sidebar-footer-text" />
+                <Label fx:id="lblSidebarRole" styleClass="sidebar-footer-text" />
+                <Region prefHeight="6" />
+                <Button fx:id="btnLogout"
+                        styleClass="btn-logout"
+                        text="⏻  Sign Out"
+                        maxWidth="Infinity"
+                        onAction="#onLogoutClicked" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+
+            <HBox styleClass="top-header-bar">
+                <Button text="← Back" styleClass="btn-top-back" onAction="#onBackClicked" />
+                <Label styleClass="top-header-title" text="Student Bill, Dues &amp; Payment Ledger" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="🔄 Refresh" styleClass="btn-ghost" onAction="#onRefreshClicked" />
+            </HBox>
+
+            <ScrollPane fitToWidth="true" fitToHeight="false" styleClass="main-scroll" VBox.vgrow="ALWAYS">
+                <VBox styleClass="main-content-fluid" spacing="18">
+
+                    <HBox styleClass="welcome-hero" alignment="CENTER_LEFT" spacing="18">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="FINANCIAL OVERVIEW &amp; LEDGER" styleClass="welcome-badge" />
+                            <Label fx:id="lblResidenceInfo" text="Hall Residence &amp; Billing" styleClass="welcome-name" />
+                            <Label fx:id="lblStudentMeta" text="Student ID: Loading..." styleClass="welcome-meta" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="14" alignment="CENTER_LEFT">
+                        <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="4">
+                            <Label styleClass="section-badge" text="TOTAL INVOICED" />
+                            <Label fx:id="lblTotalBill" style="-fx-font-size: 22px; -fx-font-weight: 700;" styleClass="text-value-bold" text="৳0.00" />
+                            <Label fx:id="lblBillingPeriod" styleClass="text-muted" text="Current Period" />
+                        </VBox>
+
+                        <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="4">
+                            <Label styleClass="section-badge" text="TOTAL PAID" />
+                            <Label fx:id="lblPaidAmount" style="-fx-font-size: 22px; -fx-font-weight: 700; -fx-text-fill: #16a34a;" text="৳0.00" />
+                            <Label styleClass="text-muted" text="Verified Payments" />
+                        </VBox>
+
+                        <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="4">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label styleClass="section-badge" text="CURRENT DUE" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="lblStatusBadge" text="STATUS" />
+                            </HBox>
+                            <Label fx:id="lblDueAmount" style="-fx-font-size: 22px; -fx-font-weight: 700; -fx-text-fill: #ef4444;" text="৳0.00" />
+                            <Label fx:id="lblDueSubtext" styleClass="text-muted" text="Outstanding Balance" />
+                        </VBox>
+                    </HBox>
+
+                    <VBox styleClass="card" spacing="14">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label styleClass="card-title" text="Current Billing Period Fee Breakdown" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label fx:id="lblBreakdownPeriod" styleClass="text-muted" text="" />
+                            <Button fx:id="btnOpenPaymentRequest" text="Submit Payment Slip →" styleClass="btn-primary" onAction="#onOpenPaymentRequestClicked" />
+                        </HBox>
+
+                        <GridPane hgap="16" vgap="10">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="50" />
+                                <ColumnConstraints percentWidth="50" />
+                            </columnConstraints>
+
+                            <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                                <Label text="Hall Seat Charge:" styleClass="field-label" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="lblHallCharge" styleClass="text-value-bold" text="৳0.00" />
+                            </HBox>
+
+                            <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                                <Label text="Electricity Charge:" styleClass="field-label" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="lblElectricityCharge" styleClass="text-value-bold" text="৳0.00" />
+                            </HBox>
+
+                            <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                                <Label text="Water &amp; Sanitation:" styleClass="field-label" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="lblWaterCharge" styleClass="text-value-bold" text="৳0.00" />
+                            </HBox>
+
+                            <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                                <Label text="Maintenance &amp; Utilities:" styleClass="field-label" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="lblMaintenanceCharge" styleClass="text-value-bold" text="৳0.00" />
+                            </HBox>
+
+                            <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="2" GridPane.columnIndex="0">
+                                <Label text="Other Official Fees:" styleClass="field-label" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="lblOtherCharge" styleClass="text-value-bold" text="৳0.00" />
+                            </HBox>
+                        </GridPane>
+                    </VBox>
+
+                    <VBox fx:id="boxPaymentRequestForm" styleClass="card" spacing="14" visible="false" managed="false">
+                        <Label styleClass="card-title" text="Submit Payment Slip for Provost Verification" />
+
+                        <HBox styleClass="info-context-strip" spacing="14" alignment="CENTER_LEFT">
+                            <Label text="Student:" styleClass="field-label" />
+                            <Label fx:id="lblReqStudentDetails" styleClass="text-value-bold" text="" />
+                            <Label text="•" styleClass="text-separator" />
+                            <Label fx:id="lblReqResidence" styleClass="text-value" text="" />
+                            <Label text="•" styleClass="text-separator" />
+                            <Label text="Current Due:" styleClass="field-label" />
+                            <Label fx:id="lblReqDue" style="-fx-text-fill: #ef4444; -fx-font-weight: 700;" text="" />
+                            <Label fx:id="lblReqPeriod" visible="false" managed="false" text="" />
+                        </HBox>
+
+                        <GridPane hgap="16" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="150" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                            </columnConstraints>
+
+                            <Label styleClass="field-label" text="Responsible Provost *:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                            <ComboBox fx:id="cmbResponsibleProvost" promptText="-- Select Hall Provost --" maxWidth="Infinity" styleClass="combo-field" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                            <Label styleClass="field-label" text="Payment Amount (৳) *:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                            <TextField fx:id="txtPaymentAmount" promptText="Enter exact cash amount paid" styleClass="input-field" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                        </GridPane>
+
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Label fx:id="lblRequestFeedback" text="" styleClass="status-error" HBox.hgrow="ALWAYS" wrapText="true" />
+                            <Button text="Cancel" styleClass="btn-ghost" onAction="#onClosePaymentRequestClicked" />
+                            <Button fx:id="btnSubmitPaymentRequest" text="Submit for Provost Approval" styleClass="btn-primary" onAction="#onSubmitPaymentRequestClicked" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="card" spacing="12" VBox.vgrow="ALWAYS">
+                        <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+
+                            <Tab text="Pending &amp; Processed Payment Requests">
+                                <VBox spacing="12" style="-fx-padding: 14 0 0 0;">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Submitted Payment Slips" styleClass="card-title" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="lblRequestCount" text="0 request(s)" style="-fx-font-size: 12px; -fx-text-fill: #94a3b8;" />
+                                    </HBox>
+
+                                    <TableView fx:id="tablePaymentRequests" minHeight="240">
+                                        <columns>
+                                            <TableColumn fx:id="colReqCode" text="Req Code" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colReqPeriod" text="Billing Period" minWidth="110" prefWidth="120" />
+                                            <TableColumn fx:id="colReqAmount" text="Amount (৳)" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER-RIGHT;" />
+                                            <TableColumn fx:id="colReqProvost" text="Assigned Provost" minWidth="130" prefWidth="150" />
+                                            <TableColumn fx:id="colReqDate" text="Date Submitted" minWidth="110" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colReqStatus" text="Status" minWidth="95" prefWidth="105" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colReqReason" text="Provost Note / Rejection Reason" minWidth="180" prefWidth="220" />
+                                        </columns>
+                                        <placeholder>
+                                            <Label text="No payment requests submitted yet." style="-fx-text-fill: #64748b; -fx-font-size: 13px;" />
+                                        </placeholder>
+                                    </TableView>
+                                </VBox>
+                            </Tab>
+
+                            <Tab text="Confirmed Payment History">
+                                <VBox spacing="12" style="-fx-padding: 14 0 0 0;">
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Official Receipts &amp; Cleared Payments" styleClass="card-title" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="lblHistoryCount" text="0 payment(s)" style="-fx-font-size: 12px; -fx-text-fill: #94a3b8;" />
+                                    </HBox>
+
+                                    <TableView fx:id="tablePaymentHistory" minHeight="240">
+                                        <columns>
+                                            <TableColumn fx:id="colPayCode" text="Payment Code" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colPayPeriod" text="Billing Period" minWidth="110" prefWidth="120" />
+                                            <TableColumn fx:id="colPayAmount" text="Amount (৳)" minWidth="95" prefWidth="110" style="-fx-alignment: CENTER-RIGHT;" />
+                                            <TableColumn fx:id="colPayDate" text="Payment Date" minWidth="110" prefWidth="120" style="-fx-alignment: CENTER;" />
+                                            <TableColumn fx:id="colPayProvost" text="Approved By" minWidth="130" prefWidth="150" />
+                                            <TableColumn fx:id="colPayResidence" text="Residence" minWidth="140" prefWidth="160" />
+                                            <TableColumn fx:id="colPayStatus" text="Status" minWidth="90" prefWidth="100" style="-fx-alignment: CENTER;" />
+                                        </columns>
+                                        <placeholder>
+                                            <Label text="No confirmed payments recorded." style="-fx-text-fill: #64748b; -fx-font-size: 13px;" />
+                                        </placeholder>
+                                    </TableView>
+                                </VBox>
+                            </Tab>
+
+                        </TabPane>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <HBox styleClass="status-strip">
+                <Label text="●" styleClass="status-dot-active" />
+                <Label styleClass="status-strip-text" text="Financial Ledger Synchronized · Live DB Connected" />
+            </HBox>
+
+            <HBox styleClass="university-footer">
+                <Label styleClass="university-footer-text" text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

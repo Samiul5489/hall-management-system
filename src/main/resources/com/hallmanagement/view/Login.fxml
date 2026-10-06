@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.hallmanagement.controller.LoginController"
+           styleClass="root-pane"
+           stylesheets="@../css/login.css"
+           onKeyPressed="#onKeyPressed"
+           minWidth="960" minHeight="640">
+
+    <VBox styleClass="bg-overlay" alignment="CENTER" spacing="16">
+
+        <VBox alignment="CENTER" spacing="4" styleClass="app-header">
+            <Label styleClass="app-title"    text="UNIVERSITY HALL MANAGEMENT SYSTEM" />
+            <Label styleClass="app-subtitle" text="Smart Hall Management &amp; Student Residence System" />
+        </VBox>
+
+        <VBox styleClass="login-card" alignment="TOP_CENTER" spacing="0" prefWidth="480">
+
+            <VBox styleClass="card-header" alignment="CENTER" spacing="3">
+                <Label styleClass="card-header-text" text="Welcome to RUET Hall Management" />
+                <Label styleClass="card-header-subtext" text="Sign in to access your hall portal" />
+            </VBox>
+
+            <VBox styleClass="card-body" spacing="16">
+
+                <VBox spacing="6">
+                    <Label styleClass="field-label" text="Student Roll / Provost ID" />
+                    <TextField fx:id="txtUserId"
+                               styleClass="input-field"
+                               promptText="e.g. 2403058 or provost001"
+                               maxWidth="Infinity" />
+                </VBox>
+
+                <VBox spacing="6">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label styleClass="field-label" text="Password" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Hyperlink text="Forgot Password?" styleClass="forgot-password" onAction="#onForgotPasswordClicked" />
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" styleClass="password-container">
+                        <StackPane HBox.hgrow="ALWAYS">
+                            <PasswordField fx:id="txtPassword"
+                                          styleClass="password-input-field"
+                                          promptText="Enter your account password"
+                                          maxWidth="Infinity" />
+                            <TextField fx:id="txtPasswordPlain"
+                                       styleClass="password-input-field"
+                                       promptText="Enter your account password"
+                                       maxWidth="Infinity"
+                                       visible="false"
+                                       managed="false" />
+                        </StackPane>
+                        <Button fx:id="btnTogglePassword"
+                                styleClass="btn-toggle-password"
+                                text="👁"
+                                onAction="#onTogglePasswordClicked"
+                                focusTraversable="false" />
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label styleClass="field-label" text="Access Role" />
+                    <ComboBox fx:id="cmbRole"
+                              styleClass="combo-field"
+                              maxWidth="Infinity"
+                              promptText="Select Access Role" />
+                </VBox>
+
+                <Region prefHeight="4" />
+
+                <Button fx:id="btnLogin"
+                        styleClass="btn-primary"
+                        text="SIGN IN TO PORTAL"
+                        maxWidth="Infinity"
+                        defaultButton="true"
+                        onAction="#onLoginClicked" />
+
+                <VBox alignment="CENTER" spacing="4">
+                    <Hyperlink text="Don't have an account? Create one" styleClass="link-register" onAction="#onCreateAccountClicked" />
+                </VBox>
+
+                <HBox spacing="10">
+                    <Button fx:id="btnClear"
+                            styleClass="btn-ghost"
+                            text="Clear Form"
+                            maxWidth="Infinity"
+                            onAction="#onClearClicked"
+                            HBox.hgrow="ALWAYS" />
+                    <Button fx:id="btnExit"
+                            styleClass="btn-ghost"
+                            text="Exit App"
+                            maxWidth="Infinity"
+                            onAction="#onExitClicked"
+                            HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <Label fx:id="lblStatus"
+                       text=""
+                       wrapText="true"
+                       maxWidth="Infinity"
+                       alignment="CENTER"
+                       visible="false"
+                       managed="false" />
+
+            </VBox>
+
+            <HBox styleClass="card-footer" alignment="CENTER">
+                <Label styleClass="footer-text"
+                       text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+
+    </VBox>
+
+</StackPane>

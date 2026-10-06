@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.hallmanagement.controller.RegisterController"
+           styleClass="root-pane"
+           stylesheets="@../css/login.css"
+           minWidth="960" minHeight="640">
+
+    <VBox styleClass="bg-overlay" alignment="CENTER" spacing="16">
+
+        <VBox alignment="CENTER" spacing="4" styleClass="app-header">
+            <Label styleClass="app-title" text="UNIVERSITY HALL MANAGEMENT SYSTEM" />
+            <Label styleClass="app-subtitle" text="Smart Hall Management &amp; Student Residence System" />
+        </VBox>
+
+        <VBox styleClass="login-card" maxWidth="620" prefHeight="580" alignment="TOP_CENTER" spacing="0">
+
+            <HBox styleClass="card-header" alignment="CENTER_LEFT" spacing="14">
+                <Button text="← Back" styleClass="btn-top-back" onAction="#onBackToLoginClicked" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label styleClass="card-header-text" text="Create New Account" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Region prefWidth="70" />
+            </HBox>
+
+            <ScrollPane fitToWidth="true" fitToHeight="false" styleClass="card-scroll-pane" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+                <VBox styleClass="card-body" spacing="16">
+                    <padding><Insets top="20" right="32" bottom="30" left="32"/></padding>
+
+                    <Label fx:id="lblFeedback" styleClass="status-error" text="" wrapText="true" alignment="CENTER" maxWidth="Infinity" visible="false" managed="false" />
+
+                    <GridPane hgap="14" vgap="12" alignment="CENTER_LEFT">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="110" />
+                            <ColumnConstraints hgrow="ALWAYS" />
+                        </columnConstraints>
+
+                        <Label text="Account Role:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                        <ComboBox fx:id="cmbRole" maxWidth="Infinity" styleClass="combo-field" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                        <Label text="User Roll / ID:" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                        <TextField fx:id="txtUserId" promptText="e.g. 2403058 or provost001" styleClass="input-field" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                        <Label text="Full Name:" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                        <TextField fx:id="txtName" promptText="Enter full official name" styleClass="input-field" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                        <Label text="Phone Number:" styleClass="field-label" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                        <TextField fx:id="txtPhone" promptText="e.g. 017xxxxxxxx" styleClass="input-field" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+                        <Label text="Email Address:" styleClass="field-label" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                        <TextField fx:id="txtEmail" promptText="e.g. student@gmail.com" styleClass="input-field" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+                        <Label text="Account Password:" styleClass="field-label" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+                        <HBox alignment="CENTER_LEFT" styleClass="password-container" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                            <StackPane HBox.hgrow="ALWAYS">
+                                <PasswordField fx:id="txtPasswordHidden" promptText="Create secure password" styleClass="password-input-field" />
+                                <TextField fx:id="txtPasswordVisible" promptText="Create secure password" styleClass="password-input-field" visible="false" managed="false" />
+                            </StackPane>
+                            <Button fx:id="btnTogglePassword" text="👁" onAction="#onTogglePassword" styleClass="btn-toggle-password" focusTraversable="false" />
+                        </HBox>
+                    </GridPane>
+
+                    <VBox fx:id="boxStudentFields" spacing="14">
+                        <Separator style="-fx-opacity: 0.15;" />
+
+                        <Label text="ACADEMIC INFORMATION" styleClass="form-section-header" />
+                        <GridPane hgap="14" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="110" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                            </columnConstraints>
+
+                            <Label text="Department:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                            <TextField fx:id="txtDepartment" promptText="e.g. CSE, EEE, ECE, ME, CE" styleClass="input-field" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                            <Label text="Academic Year:" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                            <ComboBox fx:id="cmbYear" maxWidth="Infinity" styleClass="combo-field" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                        </GridPane>
+
+                        <Separator style="-fx-opacity: 0.15;" />
+                        <Label text="RESIDENCE &amp; SEAT ALLOCATION" styleClass="form-section-header" />
+                        <GridPane hgap="14" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="110" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                            </columnConstraints>
+
+                            <Label text="Current Hall:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                            <ComboBox fx:id="cmbCurrentHall" maxWidth="Infinity" styleClass="combo-field" promptText="Select Hall" GridPane.rowIndex="0" GridPane.columnIndex="1" onAction="#onCurrentHallChanged" />
+
+                            <Label text="Current Room:" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                            <ComboBox fx:id="cmbCurrentRoom" maxWidth="Infinity" styleClass="combo-field" promptText="Select Room" GridPane.rowIndex="1" GridPane.columnIndex="1" onAction="#onCurrentRoomChanged" />
+
+                            <Label text="Current Seat:" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                            <ComboBox fx:id="cmbCurrentSeat" maxWidth="Infinity" styleClass="combo-field" promptText="Select Available Seat" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                            <Label text="Previous Hall:" styleClass="field-label" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                            <ComboBox fx:id="cmbPreviousHall" maxWidth="Infinity" styleClass="combo-field" promptText="Select Previous Hall (Optional)" GridPane.rowIndex="3" GridPane.columnIndex="1" onAction="#onPreviousHallChanged" />
+
+                            <Label fx:id="lblPreviousRoom" text="Previous Room:" styleClass="field-label" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                            <ComboBox fx:id="cmbPreviousRoom" maxWidth="Infinity" styleClass="combo-field" promptText="Select Previous Room" GridPane.rowIndex="4" GridPane.columnIndex="1" onAction="#onPreviousRoomChanged" />
+
+                            <Label fx:id="lblPreviousSeat" text="Previous Seat:" styleClass="field-label" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+                            <ComboBox fx:id="cmbPreviousSeat" maxWidth="Infinity" styleClass="combo-field" promptText="Select Previous Seat" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+                        </GridPane>
+                    </VBox>
+
+                    <VBox fx:id="boxProvostFields" spacing="12" managed="false" visible="false">
+                        <Separator style="-fx-opacity: 0.15;" />
+                        <GridPane hgap="14" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="110" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                            </columnConstraints>
+                            <Label text="Assigned Hall:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                            <ComboBox fx:id="cmbHall" maxWidth="Infinity" styleClass="combo-field" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                        </GridPane>
+                    </VBox>
+
+                    <Region prefHeight="6" />
+
+                    <Button fx:id="btnRegister" text="COMPLETE REGISTRATION" maxWidth="Infinity" styleClass="btn-primary" onAction="#onRegisterClicked" />
+
+                    <VBox alignment="CENTER" spacing="4">
+                        <Hyperlink text="Already have an account? Sign in here" styleClass="forgot-password" onAction="#onBackToLoginClicked" />
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+
+            <HBox styleClass="card-footer" alignment="CENTER">
+                <Label styleClass="footer-text" text="Rajshahi University of Engineering &amp; Technology · Hall Management System · Automated Hall ERP" />
+            </HBox>
+
+        </VBox>
+    </VBox>
+</StackPane>
